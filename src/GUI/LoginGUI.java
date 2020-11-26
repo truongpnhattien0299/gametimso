@@ -22,7 +22,6 @@ public class LoginGUI extends JFrame {
 	Image img;
 
 	public LoginGUI() {
-		
 		initcomponents();
 		actionListener();
 	}

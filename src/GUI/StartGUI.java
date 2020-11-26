@@ -8,9 +8,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import javax.imageio.ImageIO;
 
 import java.util.*;
@@ -21,6 +22,12 @@ import javax.swing.Timer;
 import BLL.UserBLL;
 
 public class StartGUI implements Runnable {
+	private BufferedReader in;
+	private BufferedWriter out;
+	private ObjectOutputStream outobj;
+	private ObjectInputStream inobj;
+	private Socket socket;
+	
 	private JFrame mainJFrame;
 	private JButton num_bt, num_demo, num_pp;
 	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start;
@@ -28,33 +35,41 @@ public class StartGUI implements Runnable {
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
 	private Integer second, minute;
-	private Socket socket;
 	private ArrayList<JButton> list_bt;
-	private BufferedReader in;
-	private BufferedWriter out;
+	
 	static boolean flag = false;
 	boolean winner;
 	UserBLL userBLL = new UserBLL();
 	private int x = 27, y = 15, index;
-	Integer[] arr;
+	Integer[] arr = new Integer[100];
 
 	public StartGUI() {
-		UserBLL userBLL = new UserBLL();
+		StreamWorker();
+		createAndShow();
+	}
+	
+	public void StreamWorker()
+	{
 		socket = userBLL.CreateSocket("127.0.0.1", 1234);
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			outobj = new ObjectOutputStream(socket.getOutputStream());
+			inobj = new ObjectInputStream(socket.getInputStream());
+						
 			out.write("room\n");
 			out.flush();
+
+			arr = (Integer[]) inobj.readObject();
 			
-			String s = in.readLine();
-			System.out.println(s);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		createAndShow();
 	}
-
+	
 	public void createAndShow() {
 
 		list_bt = new ArrayList<JButton>();
@@ -68,7 +83,6 @@ public class StartGUI implements Runnable {
 		Sound = new JLabel();
 		Start = new JLabel();
 		Search = new JLabel();
-		arr = userBLL.so(100);
 
 		for (int i = 1; i <= 10; i++) {
 			for (int j = 1; j <= 10; j++) {
@@ -221,7 +235,6 @@ public class StartGUI implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 
 	}
 

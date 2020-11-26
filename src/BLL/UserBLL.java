@@ -12,7 +12,7 @@ public class UserBLL {
 		return userDAL.Login(username, password);
 	}
 	
-	public Integer[] so(int qty) 
+	public Integer[] so(int qty)
 	{
 		return userDAL.so(qty);
 	}
