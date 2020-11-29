@@ -44,6 +44,7 @@ public class UserDAL {
 		return arr;
 	}
 	
+	
 	public Socket create_socket(String host, int port)
 	{
 		Socket socket = null;

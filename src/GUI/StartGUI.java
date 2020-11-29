@@ -15,28 +15,32 @@ import java.net.Socket;
 import javax.imageio.ImageIO;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.*;
 import javax.swing.Timer;
 
 import BLL.UserBLL;
 
-public class StartGUI implements Runnable {
+public class StartGUI {
 	private BufferedReader in;
 	private BufferedWriter out;
 	private ObjectOutputStream outobj;
 	private ObjectInputStream inobj;
 	private Socket socket;
-	
+	boolean oke = true;
+	private JLabel label;
+
 	private JFrame mainJFrame;
 	private JButton num_bt, num_demo, num_pp;
-	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start;
+	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start, numfind;
 	private JPanel mainJPanel;
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
 	private Integer second, minute;
 	private ArrayList<JButton> list_bt;
-	
+	private ExecutorService executor;
 	static boolean flag = false;
 	boolean winner;
 	UserBLL userBLL = new UserBLL();
@@ -44,34 +48,77 @@ public class StartGUI implements Runnable {
 	Integer[] arr = new Integer[100];
 
 	public StartGUI() {
-		StreamWorker();
 		createAndShow();
 	}
-	
-	public void StreamWorker()
-	{
+
+	public void StreamWorker() {
 		socket = userBLL.CreateSocket("127.0.0.1", 1234);
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			outobj = new ObjectOutputStream(socket.getOutputStream());
 			inobj = new ObjectInputStream(socket.getInputStream());
-						
+
 			out.write("room\n");
 			out.flush();
 
 			arr = (Integer[]) inobj.readObject();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
-		}catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		executor = Executors.newFixedThreadPool(1);
+		ReceiveFromServer recv = new ReceiveFromServer(socket, in);
+		executor.execute(recv);
 	}
-	
-	public void createAndShow() {
+	public class ReceiveFromServer implements Runnable {
+		private Socket socket;
+		private BufferedReader in;
 
+		public ReceiveFromServer(Socket socket, BufferedReader in) {
+			this.socket = socket;
+			this.in = in;
+		}
+		public void run() {
+			try {
+				while (true) {
+					
+					if(oke==true)
+					{
+						String data = in.readLine();
+	                    StringTokenizer cat = new StringTokenizer(data, "#");
+	                    String s= cat.nextToken();
+						if(s.equals("number"))
+						{
+							s=cat.nextToken();
+							System.out.println(s);
+							numfind.setText(s);
+						}
+						if(data.equals("dung"))
+						{
+							label.setForeground(Color.WHITE);
+							label.setBackground(Color.green);
+							out.write("sotieptheo"+"\n");
+							out.flush();
+						}
+						if(data.equals("dichdung"))
+						{
+							out.write("sotieptheo"+"\n");
+							out.flush();
+							
+						}
+					}
+					
+				}
+			} catch (IOException e) {
+			}
+		}
+	}
+	public void createAndShow() {
+		StreamWorker();
 		list_bt = new ArrayList<JButton>();
 		num_pp = new JButton();
 		mainJFrame = new JFrame();
@@ -80,6 +127,7 @@ public class StartGUI implements Runnable {
 		lb_iconClock = new JLabel();
 		Player1 = new JLabel();
 		Player2 = new JLabel();
+		numfind = new JLabel();
 		Sound = new JLabel();
 		Start = new JLabel();
 		Search = new JLabel();
@@ -171,6 +219,10 @@ public class StartGUI implements Runnable {
 		Player1.setText("Player 1" + " : " + 0);
 		mainJFrame.add(Player1);
 
+		numfind.setBounds(600, 20, 80, 20);
+		numfind.setForeground(Color.WHITE);
+		mainJFrame.add(numfind);
+
 		Player2.setBounds(700, 18, 80, 20);
 		Player2.setForeground(Color.CYAN);
 		Player2.setText("Player 2" + " : " + 1);
@@ -227,36 +279,34 @@ public class StartGUI implements Runnable {
 
 	}
 
-	public static void main(String arg[]) {
 
-		StartGUI start = new StartGUI();
-
-	}
-
-	@Override
-	public void run() {
-
-	}
 
 	public class HighlightMouseListener extends MouseAdapter {
 		public JLabel previous;
-
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Component source = e.getComponent();
 			if (!(source instanceof JLabel)) {
 				return;
 			}
-			JLabel label = (JLabel) source;
+			label = (JLabel) source;
 			if (previous != null) {
 				previous.setBackground(null);
 				previous.setForeground(null);
 				previous.setOpaque(false);
 			}
 			previous = label;
-			label.setForeground(Color.WHITE);
-			label.setBackground(Color.RED);
+			String i =label.getText();
 			label.setOpaque(true);
+			try {
+				
+				out.write("click#"+i+"\n");
+				out.flush();
+				
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
 		}
 
 	}
