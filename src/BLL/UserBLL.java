@@ -1,25 +1,22 @@
 package BLL;
 
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
 
 import DAL.UserDAL;
 
 public class UserBLL {
 	
-	UserDAL userDAL = new UserDAL();
-	public Boolean Login(String username, String password)
-	{
-		return userDAL.Login(username, password);
-	}
-	
+	public UserBLL() {}
 	public Integer[] so(int qty)
 	{
-		return userDAL.so(qty);
+		Integer[] arr = new Integer[qty];
+	    for (int i = 0; i <arr.length; i++) {
+	        arr[i] = i+1;
+	    }
+	    Collections.shuffle(Arrays.asList(arr));
+		return arr;
 	}
 	
-	
-	public Socket CreateSocket(String host, int port)
-	{
-		return userDAL.create_socket(host, port);
-	}
 }

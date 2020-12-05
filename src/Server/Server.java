@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class Server {
 	private static ServerSocket server = null;
     public static int port = 1234;
-    public static int numThread = 2;
+    public static int numThread = 40;
     public static ArrayList<Worker> workers = new ArrayList<>();
     public static ArrayList<Room> rooms = new ArrayList<>();
   

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,10 +32,10 @@ public class StartGUI {
 	private Socket socket;
 	boolean oke = true;
 	private JLabel label;
-
+	ObjectInputStream oois ;
 	private JFrame mainJFrame;
 	private JButton num_bt, num_demo, num_pp;
-	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start, numfind;
+	private JLabel  num_lbl,labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start, numfind;
 	private JPanel mainJPanel;
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
@@ -43,36 +44,25 @@ public class StartGUI {
 	private ExecutorService executor;
 	static boolean flag = false;
 	boolean winner;
+	ArrayList<JLabel> arr_num= new ArrayList<>();
 	UserBLL userBLL = new UserBLL();
 	private int x = 27, y = 15, index;
 	Integer[] arr = new Integer[100];
 
-	public StartGUI() {
-		createAndShow();
-	}
+	public StartGUI(Socket socket,String status) throws IOException, ClassNotFoundException {
 
-	public void StreamWorker() {
-		socket = userBLL.CreateSocket("127.0.0.1", 1234);
-		try {
-			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			outobj = new ObjectOutputStream(socket.getOutputStream());
-			inobj = new ObjectInputStream(socket.getInputStream());
-
-			out.write("room\n");
-			out.flush();
-
-			arr = (Integer[]) inobj.readObject();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			this.socket = socket;		
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));      
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            if(status.equals("vaogame"))
+			send("room");
+            if(status.equals("vaoxem"))
+            send("vaoroom");
+		System.out.println("DSsdv");
 		executor = Executors.newFixedThreadPool(1);
 		ReceiveFromServer recv = new ReceiveFromServer(socket, in);
 		executor.execute(recv);
+		
 	}
 	public class ReceiveFromServer implements Runnable {
 		private Socket socket;
@@ -89,27 +79,97 @@ public class StartGUI {
 					if(oke==true)
 					{
 						String data = in.readLine();
+						System.out.print(data+"\n");
 	                    StringTokenizer cat = new StringTokenizer(data, "#");
 	                    String s= cat.nextToken();
 						if(s.equals("number"))
 						{
+							System.out.println("loaddaodien");
 							s=cat.nextToken();
 							System.out.println(s);
 							numfind.setText(s);
 						}
-						if(data.equals("dung"))
+						if(s.equals("nguoixem1dung"))
+						{
+							s=cat.nextToken();
+							for(JLabel x : arr_num)
+							{
+								if(x.getText().equals(s))
+								{
+									x.setBackground(Color.green);
+								}
+							}
+							out.write("sotieptheo"+"\n");
+							out.flush();
+						}
+						if(s.equals("nguoixem2dung"))
+						{
+							s=cat.nextToken();
+							for(JLabel x : arr_num)
+							{
+								if(x.getText().equals(s))
+								{
+									x.setBackground(Color.red);
+								}
+							}
+							out.write("sotieptheo"+"\n");
+							out.flush();
+						}
+						if(data.equals("dung1"))
 						{
 							label.setForeground(Color.WHITE);
 							label.setBackground(Color.green);
 							out.write("sotieptheo"+"\n");
 							out.flush();
 						}
-						if(data.equals("dichdung"))
+						if(data.equals("dung2"))
 						{
+							label.setForeground(Color.WHITE);
+							label.setBackground(Color.red);
+							out.write("sotieptheo"+"\n");
+							out.flush();
+						}
+						if(data.equals("dichdung1"))
+						{
+							
+							for(JLabel x : arr_num)
+							{
+								if(x.getText().equals(numfind.getText()))
+								{
+									x.setBackground(Color.red);
+								}
+							}
 							out.write("sotieptheo"+"\n");
 							out.flush();
 							
 						}
+						if(data.equals("dichdung2"))
+						{
+							
+							for(JLabel x : arr_num)
+							{
+								if(x.getText().equals(numfind.getText()))
+								{
+									x.setBackground(Color.green);
+								}
+							}
+							out.write("sotieptheo"+"\n");
+							out.flush();
+							
+						}
+						if(data.equals("guidulieuxong"))
+						{
+							
+							createAndShow();
+						}
+						if(s.equals("mangne"))
+						{
+							for(int i=0;i<100;i++)
+							{
+								arr[i]=Integer.parseInt(cat.nextToken());
+							}
+						}
+							
 					}
 					
 				}
@@ -117,8 +177,18 @@ public class StartGUI {
 			}
 		}
 	}
+	void send(String s)
+	{
+		try {
+			this.out.write(s);
+			this.out.newLine();
+			this.out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public void createAndShow() {
-		StreamWorker();
 		list_bt = new ArrayList<JButton>();
 		num_pp = new JButton();
 		mainJFrame = new JFrame();
@@ -155,7 +225,7 @@ public class StartGUI {
 				num_lbl.setText("" + arr[index - 1]);
 				num_lbl.setForeground(Color.BLACK);
 				num_lbl.addMouseListener(new HighlightMouseListener());
-
+				arr_num.add(num_lbl);
 				mainJPanel.add(num_lbl);
 
 				num_pp.setBounds(10, 40, 80, 20);
@@ -291,9 +361,7 @@ public class StartGUI {
 			}
 			label = (JLabel) source;
 			if (previous != null) {
-				previous.setBackground(null);
-				previous.setForeground(null);
-				previous.setOpaque(false);
+				
 			}
 			previous = label;
 			String i =label.getText();

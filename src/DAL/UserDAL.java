@@ -14,50 +14,31 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class UserDAL {
-	public UserDAL() {}
-	public Boolean Login(String username, String password)
-	{
+	 Statement stm = null;
+	public UserDAL() {
 		DBConnection conn = new DBConnection();
 		try {
-			Statement stm = conn.getConnection().createStatement();
-			String sql = "SELECT count(*) FROM user WHERE username='"+ username +"' and password='"+ password +"'";
-			ResultSet resultSet = stm.executeQuery(sql);
-			if(resultSet.next())
-			{
-				System.out.println(resultSet.getString(1));
-				if(resultSet.getString(1).equals("1"))
-					return true;
-			}
+			stm = conn.getConnection().createStatement();
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
 	}
-	
-	public Integer[] so(int qty)
+
+	public User[] getAlluser() throws SQLException
 	{
-		Integer[] arr = new Integer[qty];
-	    for (int i = 0; i <arr.length; i++) {
-	        arr[i] = i+1;
-	    }
-	    Collections.shuffle(Arrays.asList(arr));
-		return arr;
+		ResultSet rs = stm.executeQuery("select * from user");
+        User[] List = new User[50];
+         int i =0;
+         // show data
+         while (rs.next()) {
+                 User x = new User(rs.getInt(1),rs.getString(2),rs.getString(3));
+                 List[i]=x;
+                 i++;
+             } 
+         List[i]=null;
+         return List;
+		
 	}
 	
-	
-	public Socket create_socket(String host, int port)
-	{
-		Socket socket = null;
-		try {
-			socket = new Socket(host, port);
-			System.out.println("Client connection");
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return socket;
-	}
 }

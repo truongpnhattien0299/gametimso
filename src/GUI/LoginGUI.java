@@ -3,15 +3,23 @@ package GUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import BLL.UserBLL;
+import GUI.StartGUI.ReceiveFromServer;
 
 public class LoginGUI extends JFrame {
 
@@ -20,12 +28,83 @@ public class LoginGUI extends JFrame {
 	private JButton btnButtonLogin;
 	private JPasswordField passwordField;
 	Image img;
-
+	boolean oke = true;
+ private Socket socket = null;
+    BufferedWriter out = null;
+    BufferedReader in  = null;
+    ExecutorService executor;
+    private boolean onl = true;
+     private static String host = "localhost";
+    public static LoginGUI frame;
 	public LoginGUI() {
+		 try {
+			socket = new Socket("127.0.0.1", 1234);
+			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initcomponents();
 		actionListener();
+		executor = Executors.newFixedThreadPool(1);
+		ReceiveFromServer recv = new ReceiveFromServer(socket, in);
+		executor.execute(recv);
+		
+		
 	}
+	public class ReceiveFromServer implements Runnable {
+		private Socket socket;
+		private BufferedReader in;
 
+		public ReceiveFromServer(Socket socket, BufferedReader in) {
+			this.socket = socket;
+			this.in = in;
+		}
+		public void run() {
+			while (true) {
+				if(oke == false) break;
+					String data;
+					try {
+						data = in.readLine();
+						
+						StringTokenizer cat = new StringTokenizer(data, "#");
+	                    String s= cat.nextToken();
+	                    if(s.equals("dangnhap"))
+	                    {
+	                    	s= cat.nextToken();
+	                    	if(s.equals("ok"))
+	                    		{
+	                    			System.out.print("vodangnhap");
+	                    			dong();
+	                    		}
+	                    	else
+	                    		 JOptionPane.showMessageDialog(contentPane, "Đăng nhập sai mật khẩu hoặc pass hoặc tài khoản đã đượ đăng nhập ở 1 nơi khác.");
+	                        
+	                    }
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                    
+					
+				
+				
+			}
+		}
+	}
+	void dong() throws ClassNotFoundException, IOException
+	{
+		oke=false;
+		
+		mainGUI framex = new mainGUI(socket);
+		framex.setVisible(true);
+		frame.setVisible(false);
+		
+	}
 	public void initcomponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -80,19 +159,32 @@ public class LoginGUI extends JFrame {
 			String password = String.valueOf(passwordField.getPassword());
 			if (username.equals("") || password.equals("")) {
 				JOptionPane.showConfirmDialog(rootPane, "Some Fields Are is Empty", "Error", 1);
-			} else if (userBLL.Login(username, password) == true) {
-						dispose();
-						System.out.println("login success");
-						new StartGUI();
+			} else 
+			{
+					String s ="dangnhap#"+username+"#"+password;	
+					send(s);
 				   }
 		}
+	}
+	void send(String s)
+	{
+		try {
+			out.write(s);
+			out.newLine();
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginGUI frame = new LoginGUI();
+					frame = new LoginGUI();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
