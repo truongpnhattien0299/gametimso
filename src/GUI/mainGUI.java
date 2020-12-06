@@ -25,7 +25,7 @@ public class mainGUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField jTextFieldUsername;
-	private JButton btnButtonLogin,btnbutonvaogame;
+	private JButton btnButtonLogin,btnbutonvaogame,oneButton,twoButton,rankingButton,exitButton;
 	private JPasswordField passwordField;
 	Image img;
 	boolean oke = true;
@@ -33,6 +33,9 @@ public class mainGUI extends JFrame {
     BufferedWriter out = null;
     BufferedReader in  = null;
     ExecutorService executor;
+    public JPanel start;
+    
+    
 
 	
 	public mainGUI(Socket socket) {
@@ -76,57 +79,91 @@ public class mainGUI extends JFrame {
 		
 	}
 	public void initcomponents() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		setContentPane(contentPane);
+start=new JPanel();
+       
 
-		JLabel lblNewLabel = new JLabel("LOGIN");
-		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
-		lblNewLabel.setBounds(158, 24, 145, 30);
-		contentPane.add(lblNewLabel);
+        
+        ImagePanel background = new ImagePanel("background1.png", 0, 0, 800, 600);
 
-		btnButtonLogin = new JButton("Vào Xem");
-		btnButtonLogin.setBounds(170, 214, 89, 23);
-		contentPane.add(btnButtonLogin);
-		
-		btnbutonvaogame = new JButton("Vào Game");
-		btnbutonvaogame.setBounds(170, 100, 89, 23);
-		contentPane.add(btnbutonvaogame);
+         oneButton = new JButton("2 Player");
+         twoButton = new JButton("3 Players");
+         rankingButton = new JButton("Xếp hạng");
+         exitButton = new JButton("Exit");
+
+        // Ä‘á»‹nh vá»‹ trĂ­ cĂ¡c button 
+        oneButton.setBounds(350, 300, 100, 30);
+        twoButton.setBounds(350, 350, 100, 30);
+        rankingButton.setBounds(350, 400, 100, 30);
+        exitButton.setBounds(350, 450, 100, 30);
+        start.add(oneButton);
+        start.add(twoButton);
+        start.add(rankingButton);
+        start.add(exitButton);
+        start.add(background);
+        
+        start.setLayout(null);
+        start.setBounds(0, 0, 800, 600);
+        this.add(start);
+        
+        this.setLayout(null);
+		this.setSize(800, 600);
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 	public void actionListener() {
-		ActionListener ButtonLogin = new ButtonLogin();
-		btnButtonLogin.addActionListener(ButtonLogin);
+//		ActionListener ButtonLogin = new ButtonLogin();
+//		btnButtonLogin.addActionListener(ButtonLogin);
+//		
+//		ActionListener butonvaogame = new Buttonvaogame();
+//		btnbutonvaogame.addActionListener(butonvaogame);
 		
-		ActionListener butonvaogame = new Buttonvaogame();
-		btnbutonvaogame.addActionListener(butonvaogame);
+//		ActionListener rankingAction = new rankingAction();
+//		rankingButton.addActionListener(rankingAction);
+		ActionListener oneAction = new oneAction();
+		oneButton.addActionListener(oneAction);
+		
+	}
+	
+	
+//	class rankingAction implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+
+//		}
+//	}
+	
+	class oneAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			dispose();
+			Waiting wait = new Waiting();
+		}
 	}
 
-	class ButtonLogin implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			try {
-				dong("vaoxem");
-			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	class Buttonvaogame implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			try {
-				dong("vaogame");
-			} catch (ClassNotFoundException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+//	class ButtonLogin implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			try {
+//				dong("vaoxem");
+//			} catch (ClassNotFoundException | IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+//	class Buttonvaogame implements ActionListener {
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			try {
+//				dong("vaogame");
+//			} catch (ClassNotFoundException | IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	void send(String s)
 	{
 		try {
