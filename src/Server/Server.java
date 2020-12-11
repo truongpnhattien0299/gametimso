@@ -13,9 +13,13 @@ public class Server {
     public static int numThread = 40;
     public static ArrayList<Worker> workers = new ArrayList<>();
     public static ArrayList<Room> rooms = new ArrayList<>();
+    public static Integer[] arr_rd;
   
     public static void main(String args[]) throws IOException 
     { 
+    	
+    	Random_So rd = new Random_So();
+		arr_rd= rd.so();
         ExecutorService executor = Executors.newFixedThreadPool(numThread);
         try
         { 
