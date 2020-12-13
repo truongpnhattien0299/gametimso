@@ -7,11 +7,22 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+
+
+import static DAL.Cl_Connect.socket;
+
+import static DAL.Cl_Connect.in;
+import static DAL.Cl_Connect.out;
+import static DAL.Cl_Connect.outobj;
+import static DAL.Cl_Connect.inobj;
+
 import GUI.LoginGUI.ButtonLogin;
+import static DAL.Cl_Connect.arr_result;
 
 /**
  *
@@ -24,10 +35,13 @@ public class StartPanel2 extends JFrame {
 	  JButton twoButton;
 	  JButton rankButton;
 	  JButton exitButton;
+	  public JLabel lb_user;
+	  
 
 //    SoundPlayer mySound = new SoundPlayer();
 
     public StartPanel2() {
+    	
     	initcomponents();
     	actionListener();
     	
@@ -38,17 +52,24 @@ public class StartPanel2 extends JFrame {
 
         
         ImagePanel background = new ImagePanel("background1.png", 0, 0, 800, 600);
-
+        
         oneButton = new JButton("2 Player");
         twoButton = new JButton("3 Players");
         rankButton = new JButton("Rank");
         exitButton = new JButton("Exit");
+        
+        lb_user = new JLabel();
 
         // Ä‘á»‹nh vá»‹ trĂ­ cĂ¡c button 
+        lb_user.setBounds(520, 30, 260, 100);
+        lb_user.setText( "USERNAME : " + arr_result[1]);
+        lb_user.setForeground(Color.RED);
         oneButton.setBounds(350, 300, 100, 30);
         twoButton.setBounds(350, 350, 100, 30);
         rankButton.setBounds(350, 400, 100, 30);
         exitButton.setBounds(350, 450, 100, 30);
+        
+        start.add(lb_user);
         start.add(oneButton);
         start.add(twoButton);
         start.add(rankButton);
@@ -78,6 +99,9 @@ public class StartPanel2 extends JFrame {
     public void actionListener() {
 		ActionListener twoPlay = new twoPlay();
 		oneButton.addActionListener(twoPlay);
+		
+		ActionListener rank = new rank();
+		rankButton.addActionListener(rank);
 	}
 
 	public class twoPlay implements ActionListener {
@@ -90,6 +114,36 @@ public class StartPanel2 extends JFrame {
 				try {
 					new StartGUI();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		   
+		}
+	}
+	
+	
+	public class rank implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			
+			  try {
+				  out.write("rank\n");
+					out.flush();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+				dispose();
+				System.out.println("vao rank");
+				try {
+					new rankGUI().setVisible(true);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

@@ -28,6 +28,7 @@ import static DAL.Cl_Connect.in;
 import static DAL.Cl_Connect.out;
 import static DAL.Cl_Connect.outobj;
 import static DAL.Cl_Connect.inobj;
+import static DAL.Cl_Connect.arr_result;
 
 public class StartGUI {
 //	private BufferedReader in;
@@ -114,7 +115,18 @@ public class StartGUI {
 						StringTokenizer cat = new StringTokenizer(data, "#");
 						String s = cat.nextToken();
 						
-						
+						if (s.equals("user1")) {
+							s=cat.nextToken();
+							System.out.println("user 1 : " +s);
+							Player1.setText(s);
+						}
+                        if (s.equals("user2")) {
+							s=cat.nextToken();
+							System.out.println("user 2 :"  + s );
+
+							Player2.setText(s);
+							
+						}
 						if (s.equals("minute")) {
 							minute = Integer.parseInt(cat.nextToken());	
 							System.out.println("so phut : " +minute);
@@ -138,16 +150,39 @@ public class StartGUI {
 										{
 											JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
 											thoigian.stop();
+											try {
+												out.write("play1Win#"+"\n");
+												out.flush();
+											} catch (IOException e1) {
+												// TODO Auto-generated catch block
+												e1.printStackTrace();
+											}
+											
 										}
 										else if(pointY>pointX)
 										{
 											JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
 											thoigian.stop();
+											try {
+												out.write("play2Win#"+"\n");
+												out.flush();
+											} catch (IOException e1) {
+												// TODO Auto-generated catch block
+												e1.printStackTrace();
+											}
 										}
 										else 
 										{
 											JOptionPane.showMessageDialog(mainJFrame, "Hoa");
 											thoigian.stop();
+											
+											try {
+												out.write("hoa#"+"\n");
+												out.flush();
+											} catch (IOException e1) {
+												// TODO Auto-generated catch block
+												e1.printStackTrace();
+											}
 										}
 									}
 									
@@ -429,9 +464,9 @@ public class StartGUI {
 
 		
 		
-		Player1.setBounds(400, 20, 80, 20);
+		Player1.setBounds(400, 20, 100, 20);
 		Player1.setForeground(Color.RED);
-		Player1.setText("Player 1" + " : ");
+		
 		mainJFrame.add(Player1);
 
 		
@@ -444,9 +479,9 @@ public class StartGUI {
 		numfind.setForeground(Color.WHITE);
 		mainJFrame.add(numfind);
 
-		Player2.setBounds(700, 18, 80, 20);
+		Player2.setBounds(700, 18, 100, 20);
 		Player2.setForeground(Color.YELLOW);
-		Player2.setText("Player 2" + " : ");
+		
 		mainJFrame.add(Player2);
 		
 		

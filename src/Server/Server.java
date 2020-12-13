@@ -31,8 +31,8 @@ public class Server {
     	System.out.print("Nhap vao so phut : ");
     	minute = stdIn.readLine();
     	System.out.println("so phut : " +minute);
-    	System.out.print("Nhap 1 de random 100 so, chon 2 de random 100 so : ");
-    	 choose= stdIn.readLine();
+//    	System.out.print("Nhap 1 de random 100 so, chon 2 de random 100 so : ");
+//    	 choose= stdIn.readLine();
     	 
 
     	
@@ -65,7 +65,8 @@ public class Server {
             while(true)
             {
                 Socket socket = server.accept(); 
-                Worker worker = new Worker(socket, Integer.toString(id)) {};
+                String user="";
+                Worker worker = new Worker(socket, Integer.toString(id),user) {};
                 executor.execute(worker);
                 workers.add(worker);
                 id++;

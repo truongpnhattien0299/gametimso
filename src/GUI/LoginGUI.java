@@ -13,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 
 
 
+
+
 public class LoginGUI extends JFrame {
 
 
@@ -126,7 +128,8 @@ public class LoginGUI extends JFrame {
 	 {
 		
 		 try {
-		    cl = new DAL.Cl_Connect("127.0.0.1", 1234);
+		    cl = new DAL.Cl_Connect();
+		    cl.CreateSocket("127.0.0.1", 1234);
 		
 			if(cl.Login(user,pass)==true)
 			{
