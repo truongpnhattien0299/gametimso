@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import javax.swing.*;
 import javax.swing.Timer;
 import static DAL.Cl_Connect.socket;
+import static Server.Server.minute;
 import static DAL.Cl_Connect.in;
 import static DAL.Cl_Connect.out;
 import static DAL.Cl_Connect.outobj;
@@ -43,7 +44,7 @@ public class StartGUI {
 	private JPanel mainJPanel;
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
-	private Integer second, minute;
+	private Integer second, minute=0;
 	private ArrayList<JButton> list_bt;
 	private ExecutorService executor;
 	private static int pointX=0;
@@ -53,6 +54,7 @@ public class StartGUI {
 	static boolean flag = false;
 	boolean winner;
 
+	int tong_num=0;
 	private int x = 27, y = 15, index;
 	private ArrayList<JButton> bt;
 	private static String value = "";
@@ -78,6 +80,7 @@ public class StartGUI {
 			out.flush();
 
 			arr = (Integer[]) inobj.readObject();
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -110,6 +113,59 @@ public class StartGUI {
 						String data = in.readLine();
 						StringTokenizer cat = new StringTokenizer(data, "#");
 						String s = cat.nextToken();
+						
+						
+						if (s.equals("minute")) {
+							minute = Integer.parseInt(cat.nextToken());	
+							System.out.println("so phut : " +minute);
+							thoigian = new Timer(1000, new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									String minute_time = minute.toString();
+									String second_time = second.toString();
+									if (minute_time.length() == 1) {
+										minute_time = "0" + minute_time;
+									}
+									if (second_time.length() == 1) {
+										second_time = "0" + second_time;
+									}
+									
+									if(second == 0 && minute==0)
+									{
+										labelClock.setText(minute_time + ":" + second_time);
+										if(pointX>pointY)
+										{
+											JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
+											thoigian.stop();
+										}
+										else if(pointY>pointX)
+										{
+											JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
+											thoigian.stop();
+										}
+										else 
+										{
+											JOptionPane.showMessageDialog(mainJFrame, "Hoa");
+											thoigian.stop();
+										}
+									}
+									
+									else if (second == 0) {
+										labelClock.setText(minute_time + ":" + second_time);
+										minute--;
+										second = 59;
+									} else {
+										labelClock.setText(minute_time + ":" + second_time);
+										second--;
+									}
+								}
+
+							});
+
+							thoigian.start();
+
+						}
 
 						if (s.equals("s1_di")) {
 							s = cat.nextToken();
@@ -128,8 +184,26 @@ public class StartGUI {
 
 						if (s.equals("number")) {
 							s = cat.nextToken();
-							System.out.println("numfind la  : " + s);
+							if(s.equals("mayman"))
+							{
+								s = cat.nextToken();
+								numfind.setText("Lucky :"+s);
+								numfind.setForeground(Color.RED);
+							}
+							
+							else if(s.equals("uutien"))
+							{
+								s = cat.nextToken();
+								numfind.setText("Advantage :"+s);
+								numfind.setForeground(Color.GREEN);
+							}
+							
+							else
+							{
+							
 							numfind.setText(s);
+							numfind.setForeground(Color.WHITE);
+							}
 						}
 
 						if (s.equals("dung")) {
@@ -138,14 +212,41 @@ public class StartGUI {
 							System.out.println("vao dung ");
 
 							if (s.equals("s1")) {
+								s = cat.nextToken();
 								bt.get(id_btn).setBackground(Color.RED);
+								if(s.equals("mayman"))
+								{
+									pointX+=3;
+								}
+								else
 								pointX++;
+								
 								Point1.setText(""+pointX);
+								if( pointX>(arr.length/2))
+								{
+									 JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
+									 out.write("play2Win#"+"\n");
+									 out.flush();
+								}
 								System.out.println("vao dung s1");
 							} else if (s.equals("s2")) {
+								s = cat.nextToken();
 								System.out.println("vao dung s2");
+								
+								if(s.equals("mayman"))
+								{
+									pointY+=3;
+								}
+								else
 								pointY++;
+								
 								Point2.setText(""+pointY);
+								if( pointX>(arr.length/2))
+								{
+									JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
+									out.write("play1Win#"+"\n");
+									out.flush();
+								}
 								bt.get(id_btn).setBackground(Color.YELLOW);
 							}
 
@@ -195,17 +296,6 @@ public class StartGUI {
 				if (index % 7 == 0) {
 					y += 10;
 				}
-//				num_lbl = new JLabel();
-//				num_lbl.setHorizontalAlignment(JLabel.CENTER);
-//				num_lbl.setOpaque(true);
-//				num_lbl.setBounds(x, y, 35, 35);
-//				num_lbl.setBackground(new Color(0, 113, 139));
-//				String stringCommand = Integer.toString(index);
-//	            num_lbl.setActionCommand(stringCommand);
-//				num_lbl.setText("" + arr[index - 1]);
-//				num_lbl.setForeground(Color.BLACK);
-//				num_lbl.addMouseListener(new HighlightMouseListener());
-
 				num_pp = new JButton();
 				bt.add(num_pp);
 				num_pp.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -245,21 +335,6 @@ public class StartGUI {
 
 				mainJPanel.add(num_pp);
 
-//				num_pp.setBounds(10, 40, 80, 20);
-//				num_pp.addActionListener(new ActionListener() {
-//					@Override
-//					public void actionPerformed(ActionEvent e) {
-//						JButton button = (JButton) e.getSource();
-//						String command = button.getActionCommand();
-//						int id_btn = Integer.parseInt(command);
-//						num_lbl.setBackground(Color.YELLOW);
-//						num_pp.setBackground(Color.YELLOW);
-//
-//					}
-//				});
-//				num_pp.setVisible(true);
-//				num_pp.setEnabled(true);
-
 				y += 70;
 			}
 			if (i % 2 == 0)
@@ -268,39 +343,91 @@ public class StartGUI {
 				y = 30;
 			x += 132;
 		}
+//		
+//		
+		
+		
+		
+//		 x=54;
+//			for (int i = 1; i <= 5; i++) {
+//				for (int j = 1; j <= 10; j++) {
+//					index = i * 10 + j - 10;
+//					if (index == 50)
+//						break;
+//					if (index % 2 == 0) {
+//						x += 91;
+//						y += 10;
+//					} else {
+//						x -= 91;
+//						y -= 20;
+//					}
+//					if (index % 7 == 0) {
+//						y += 10;
+//						x+=16;
+//					}
+//					if (index % 5 == 0) {
+//						y -= 10;
+//						x-=16;
+//					}
+//					num_pp = new JButton();
+//					bt.add(num_pp);
+//					num_pp.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+//					num_pp.setBorderPainted(false);
+////					num_pp.setContentAreaFilled( false );
+////					num_pp.setFocusPainted( false );
+//					num_pp.setHorizontalAlignment(SwingConstants.LEFT);
+//					num_pp.setBounds(x, y, 48, 48);
+//					num_pp.setBackground(new Color(0, 113, 139));
+//					String stringCommand = Integer.toString(index - 1);
+//					num_pp.setActionCommand(stringCommand);
+//					num_pp.setText("" + arr[index - 1]);
+//					num_pp.setForeground(Color.BLACK);
+//					bt.get(index - 1).addActionListener(new ActionListener() {
+//						@Override
+//						public void actionPerformed(ActionEvent e) {
+//							JButton button = (JButton) e.getSource();
+//							String command = button.getActionCommand();
+//							id_btn = Integer.parseInt(command);
+//
+//							value = button.getText();
+//							System.out.println("value click : " + value);
+//
+//							try {
+//
+//								out.write("click#" + id_btn + "#" + value + "\n");
+//								out.flush();
+//
+//							} catch (IOException e1) {
+//								e1.printStackTrace();
+//							}
+//
+//						}
+//					});
+//					num_pp.setVisible(true);
+//					num_pp.setEnabled(true);
+//
+//					mainJPanel.add(num_pp);
+//					y += 70;
+//				}
+//				if (i % 2 == 0)
+//					y = 10;
+//				else
+//					y = 30;
+//				x += 150;
+//			}
+			
+			
+			
+			
 
 		labelClock.setBounds(1000, 20, 80, 20);
 		labelClock.setForeground(Color.WHITE);
 
 		mainJFrame.add(labelClock);
 		second = 0;
-		minute = 0;
+		
 
-		thoigian = new Timer(1000, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String minute_time = minute.toString();
-				String second_time = second.toString();
-				if (minute_time.length() == 1) {
-					minute_time = "0" + minute_time;
-				}
-				if (second_time.length() == 1) {
-					second_time = "0" + second_time;
-				}
-				if (second == 59) {
-					labelClock.setText(minute_time + ":" + second_time);
-					minute++;
-					second = 0;
-				} else {
-					labelClock.setText(minute_time + ":" + second_time);
-					second++;
-				}
-			}
-
-		});
-
-		thoigian.start();
+		
 		
 		Player1.setBounds(400, 20, 80, 20);
 		Player1.setForeground(Color.RED);
@@ -313,7 +440,7 @@ public class StartGUI {
 		Point1.setText(""+pointX);
 		mainJFrame.add(Point1);
 		
-		numfind.setBounds(600, 20, 80, 20);
+		numfind.setBounds(590, 20, 80, 20);
 		numfind.setForeground(Color.WHITE);
 		mainJFrame.add(numfind);
 

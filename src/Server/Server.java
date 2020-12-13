@@ -1,9 +1,14 @@
 package Server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,12 +19,37 @@ public class Server {
     public static ArrayList<Worker> workers = new ArrayList<>();
     public static ArrayList<Room> rooms = new ArrayList<>();
     public static Integer[] arr_rd;
+    public static Integer[] point_bonus;
+    public static BufferedReader stdIn = null; 
+    public static String minute,choose;
+    
   
     public static void main(String args[]) throws IOException 
     { 
     	
+    	stdIn = new BufferedReader(new InputStreamReader(System.in));
+    	System.out.print("Nhap vao so phut : ");
+    	minute = stdIn.readLine();
+    	System.out.println("so phut : " +minute);
+    	System.out.print("Nhap 1 de random 100 so, chon 2 de random 100 so : ");
+    	 choose= stdIn.readLine();
+    	 
+
+    	
+	   
+    	
+    	
+    	
+	    
     	Random_So rd = new Random_So();
 		arr_rd= rd.so();
+		
+		point_bonus=rd.so();
+		
+		
+
+		
+		
         ExecutorService executor = Executors.newFixedThreadPool(numThread);
         try
         { 

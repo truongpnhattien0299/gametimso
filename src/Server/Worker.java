@@ -12,11 +12,15 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.StringTokenizer;
 //import static Server.;
 import static Server.Server.arr_rd;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+import static Server.Server.point_bonus;
+import static Server.Server.minute;
 
 public class Worker implements Runnable {
 
@@ -33,6 +37,7 @@ public class Worker implements Runnable {
 	private int idroom = -1;
 	private Integer[] arr_num;
 	private Integer[] temp;
+	
 
 	
 	String msg[];
@@ -50,6 +55,7 @@ public class Worker implements Runnable {
 			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			outobj = new ObjectOutputStream(socket.getOutputStream());
 			inobj = new ObjectInputStream(socket.getInputStream());
+			
 
 			String input = "";
 			msg = (String[]) inobj.readObject();
@@ -68,11 +74,27 @@ public class Worker implements Runnable {
 					break;
 
 				if (input.equals("sotieptheo")) {
+					
 					vitri++;
 					for (Worker worker : Server.workers) {
 						if (worker.idroom == idroom) {
-							worker.out.write("number#" + temp[vitri] + "\n");
-							worker.out.flush();
+							if(ktmayman(temp[vitri])) {
+								worker.out.write("number#" +"mayman#"+temp[vitri] + "\n");
+								worker.out.flush();
+							
+							}
+							
+							else if(ktuutien(temp[vitri])) {
+								worker.out.write("number#" +"uutien#"+temp[vitri] + "\n");
+								worker.out.flush();
+							
+							}
+							else
+							{
+								worker.out.write("number#" + temp[vitri] + "\n");
+								worker.out.flush();
+								
+							}
 						}
 					}
 				}
@@ -84,16 +106,18 @@ public class Worker implements Runnable {
 							
 							arr_num = arr_rd;
 							temp = arr_rd;
+							
 							room.setPlayer1(this);
 							idroom = room.getId();
 							break;
 						}
 						if (room.getPlayer2() == null) {
 							
-
+                            
 							arr_num = arr_rd;
 							temp = arr_rd;
-						
+						    
+//						    Collections.shuffle(Arrays.asList(point_bonus));
 							room.setPlayer2(this);
 							
 
@@ -103,11 +127,33 @@ public class Worker implements Runnable {
 								
 								if (worker.idroom == idroom) {
 									
+							    	System.out.println("so phut : " +minute);
+							    	
 
 									worker.outobj.writeObject(arr_num);
 									worker.outobj.flush();
-									worker.out.write("number#" + temp[0] + "\n");
+									worker.out.write("minute#" +minute+"\n");
 									worker.out.flush();
+									
+									
+									if(ktmayman(temp[0])) {
+										worker.out.write("number#" +"mayman#"+temp[0] + "\n");
+										worker.out.flush();
+									
+									}
+//									else if(ktuutien(temp[0])) {
+//										worker.out.write("number#" +"uutien#"+temp[0] + "\n");
+//										worker.out.flush();
+//									
+//									}
+									else
+									{
+										worker.out.write("number#" + temp[0] + "\n");
+										worker.out.flush();
+										
+									}
+								
+									
 								}
 							}
 							break;
@@ -171,9 +217,22 @@ public class Worker implements Runnable {
 						if (x == temp[vitri]) {
 							for (Worker worker : Server.workers) {
 								if (worker.idroom == idroom) {
-
-									worker.out.write("dung#" + player + "\n");
+                                    if(ktmayman(x)) {
+                                    	worker.out.write("dung#" + player +"#mayman" + "\n");
+    									worker.out.flush();
+                                    	
+                                    }
+                                    
+//                                    else if(ktuutien(x)) {
+//										worker.out.write("dung#" + player +"#uutien" + "\n");
+//										worker.out.flush();
+//									
+//									}
+                                    else
+                                    {
+									worker.out.write("dung#" + player +"#sothuong"+ "\n");
 									worker.out.flush();
+                                    }
 								
 									System.out.println("dung");
 								}
@@ -205,6 +264,33 @@ public class Worker implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public Boolean ktmayman(int sokt) {
+		System.out.println("sokt : "  +sokt);
+		System.out.println(point_bonus[0]);
+		
+
+		
+		for(int i=0 ;i<25;i++) {
+			if(point_bonus[i]==sokt)
+				return true;
+		}
+		return false;
+	}
+	
+	
+	public Boolean ktuutien(int sokt) {
+		System.out.println("souutien : "  +sokt);
+		System.out.println(point_bonus[0]);
+		
+
+		
+		for(int i=40 ;i<60;i++) {
+			if(point_bonus[i]==sokt)
+				return true;
+		}
+		return false;
 	}
 
 	public void Login() throws IOException, ClassNotFoundException {
