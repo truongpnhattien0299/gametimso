@@ -20,11 +20,10 @@ import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
-<<<<<<< HEAD
-=======
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -33,7 +32,6 @@ import static Server.Server.arr_rd;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import static Server.Server.point_bonus;
->>>>>>> a4c731a72b73179816d03d80c7caeea7a9251cec
 import static Server.Server.minute;
 
 public class Worker implements Runnable {
