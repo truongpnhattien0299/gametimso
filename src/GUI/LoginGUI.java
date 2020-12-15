@@ -108,6 +108,11 @@ public class LoginGUI extends JFrame {
 				System.out.println("login success");
 				new StartPanel2();
 		   }
+			else {
+				JOptionPane.showConfirmDialog(rootPane, "User or password wrong", "Error", 1);
+				
+			}
+			
 		}
 	}
 	

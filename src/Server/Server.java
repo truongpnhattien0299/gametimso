@@ -21,18 +21,37 @@ public class Server {
     public static Integer[] arr_rd;
     public static Integer[] point_bonus;
     public static BufferedReader stdIn = null; 
-    public static String minute,choose;
+    public static int minute,choose;
     
   
     public static void main(String args[]) throws IOException 
     { 
     	
     	stdIn = new BufferedReader(new InputStreamReader(System.in));
-    	System.out.print("Nhap vao so phut : ");
-    	minute = stdIn.readLine();
+    	
+    	
+    	
+    	while(true){
+            System.out.print("Nhap so phut :");
+            String str = stdIn.readLine();
+            if (str.trim().equals("")) {
+                System.out.println("Ban nhap rong, xin vui long nhap lai.");
+                continue;
+            }
+            try {
+                minute = Integer.parseInt(str);
+            } catch (NumberFormatException ex) {
+                System.out.println("Ban nhap so khong hop le, xin vui long chi nhap so.");
+                continue;
+            }
+            break;
+            
+        }
+    
     	System.out.println("so phut : " +minute);
-//    	System.out.print("Nhap 1 de random 100 so, chon 2 de random 100 so : ");
-//    	 choose= stdIn.readLine();
+    	
+    	
+
     	 
 
     	

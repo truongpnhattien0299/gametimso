@@ -13,7 +13,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 
 import java.util.*;
@@ -50,6 +53,7 @@ public class StartGUI {
 	private ExecutorService executor;
 	private static int pointX=0;
 	private static int pointY=0;
+	private String key="3";
 
 	public static int id_btn;
 	static boolean flag = false;
@@ -76,8 +80,11 @@ public class StartGUI {
 //		
 //			outobj = new ObjectOutputStream(socket.getOutputStream());
 //			inobj = new ObjectInputStream(socket.getInputStream());
-
-			out.write("room\n");
+			System.out.println("??");
+			String mahoa =encrypt("room",key);
+			System.out.println("ma hoa  : " + mahoa);
+			out.write(""+mahoa+"\n");
+//			out.write("room\n");
 			out.flush();
 
 			arr = (Integer[]) inobj.readObject();
@@ -112,7 +119,11 @@ public class StartGUI {
 					if (oke == true) {
 					
 						String data = in.readLine();
-						StringTokenizer cat = new StringTokenizer(data, "#");
+						System.out.println("data la " +data);
+						String giaima=decrypt(data, key);
+						System.out.println("giai ma la " +giaima);
+
+						StringTokenizer cat = new StringTokenizer(giaima.trim(), "#");
 						String s = cat.nextToken();
 						
 						if (s.equals("user1")) {
@@ -128,7 +139,7 @@ public class StartGUI {
 							
 						}
 						if (s.equals("minute")) {
-							minute = Integer.parseInt(cat.nextToken());	
+							minute = Integer.parseInt(cat.nextToken().trim());	
 							System.out.println("so phut : " +minute);
 							thoigian = new Timer(1000, new ActionListener() {
 
@@ -151,7 +162,11 @@ public class StartGUI {
 											JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
 											thoigian.stop();
 											try {
-												out.write("play1Win#"+"\n");
+												
+												String user1 = Player1.getText();
+												String mahoa =encrypt("play1Win#"+user1+"\n",key);
+												out.write(""+mahoa+"\n");
+//												out.write("play1Win#"+user1+"\n");
 												out.flush();
 											} catch (IOException e1) {
 												// TODO Auto-generated catch block
@@ -164,7 +179,10 @@ public class StartGUI {
 											JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
 											thoigian.stop();
 											try {
-												out.write("play2Win#"+"\n");
+												String user2 = Player2.getText();
+												String mahoa =encrypt("play2Win#"+user2+"\n",key);
+												out.write(""+mahoa+"\n");
+//												out.write("play2Win#"+user2+"\n");
 												out.flush();
 											} catch (IOException e1) {
 												// TODO Auto-generated catch block
@@ -177,7 +195,9 @@ public class StartGUI {
 											thoigian.stop();
 											
 											try {
-												out.write("hoa#"+"\n");
+												String mahoa =encrypt("hoa#"+"\n",key);
+												out.write(""+mahoa+"\n");
+//												out.write("hoa#"+"\n");
 												out.flush();
 											} catch (IOException e1) {
 												// TODO Auto-generated catch block
@@ -205,14 +225,18 @@ public class StartGUI {
 						if (s.equals("s1_di")) {
 							s = cat.nextToken();
 							id_btn = Integer.parseInt(cat.nextToken());
-							out.write("value#" + "s1#" + s + "\n");
+							String mahoa =encrypt("value#" + "s1#" + s + "\n",key);
+							out.write(""+mahoa+"\n");
+//							out.write("value#" + "s1#" + s + "\n");
 							out.flush();
 
 						}
 						if (s.equals("s2_di")) {
 							s = cat.nextToken();
 							id_btn = Integer.parseInt(cat.nextToken());
-							out.write("value#" + "s2#" + s + "\n");
+							String mahoa =encrypt("value#" + "s2#" + s + "\n",key);
+							out.write(""+mahoa+"\n");
+//							out.write("value#" + "s2#" + s + "\n");
 							out.flush();
 
 						}
@@ -258,10 +282,14 @@ public class StartGUI {
 								
 								Point1.setText(""+pointX);
 								if( pointX>(arr.length/2))
-								{
+								{    String user1 = Player1.getText();
 									 JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
-									 out.write("play2Win#"+"\n");
-									 out.flush();
+									 String mahoa =encrypt("play1Win#"+user1+"\n",key);
+										out.write(""+mahoa+"\n");
+//									 out.write("play1Win#"+user1+"\n");
+										out.flush();
+										thoigian.stop();
+
 								}
 								System.out.println("vao dung s1");
 							} else if (s.equals("s2")) {
@@ -276,16 +304,23 @@ public class StartGUI {
 								pointY++;
 								
 								Point2.setText(""+pointY);
-								if( pointX>(arr.length/2))
-								{
+								if( pointY>(arr.length/2))
+								{   String user2 = Player2.getText();
 									JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
-									out.write("play1Win#"+"\n");
+									String mahoa =encrypt("play2Win#"+user2+"\n",key);
+									out.write(""+mahoa+"\n");
+									out.write("play2Win#"+user2+"\n");
 									out.flush();
+									thoigian.stop();
+
 								}
 								bt.get(id_btn).setBackground(Color.YELLOW);
 							}
+							String mahoa =encrypt("sotieptheo" + "\n",key);
+//							
+							out.write(""+mahoa+"\n");
+//							out.write("sotieptheo" + "\n");
 
-							out.write("sotieptheo" + "\n");
 							out.flush();
 						}
 
@@ -294,6 +329,9 @@ public class StartGUI {
 				}
 			} catch (IOException e) {
 			}
+			
+			
+			
 		}
 	}
 
@@ -355,8 +393,10 @@ public class StartGUI {
 						System.out.println("value click : " + value);
 
 						try {
-
-							out.write("click#" + id_btn + "#" + value + "\n");
+							String mahoa =encrypt("click#" + id_btn + "#" + value + "\n",key);
+//							
+							out.write(""+mahoa+"\n");
+//							out.write("click#" + id_btn + "#" + value + "\n");
 							out.flush();
 
 						} catch (IOException e1) {
@@ -464,28 +504,28 @@ public class StartGUI {
 
 		
 		
-		Player1.setBounds(400, 20, 100, 20);
+		Player1.setBounds(240, 20, 200, 20);
 		Player1.setForeground(Color.RED);
 		
 		mainJFrame.add(Player1);
 
 		
-		Point1.setBounds(482, 20, 80, 20);
+		Point1.setBounds(442, 20, 80, 20);
 		Point1.setForeground(Color.BLACK);
 		Point1.setText(""+pointX);
 		mainJFrame.add(Point1);
 		
-		numfind.setBounds(590, 20, 80, 20);
+		numfind.setBounds(550, 20, 80, 20);
 		numfind.setForeground(Color.WHITE);
 		mainJFrame.add(numfind);
 
-		Player2.setBounds(700, 18, 100, 20);
+		Player2.setBounds(660, 18, 200, 20);
 		Player2.setForeground(Color.YELLOW);
 		
 		mainJFrame.add(Player2);
 		
 		
-		Point2.setBounds(782, 18, 80, 20);
+		Point2.setBounds(862, 18, 80, 20);
 		Point2.setForeground(Color.BLACK);
 		Point2.setText(""+pointY);
 		mainJFrame.add(Point2);
@@ -496,7 +536,7 @@ public class StartGUI {
 			lb_iconClock.setIcon(icon);
 		} catch (IOException ex) {
 		}
-		lb_iconClock.setBounds(910, 0, 45, 45);
+		lb_iconClock.setBounds(870, 0, 45, 45);
 		mainJFrame.add(lb_iconClock);
 
 		try {
@@ -605,4 +645,36 @@ public class StartGUI {
 //
 //	}
 
+	
+	public String encrypt(String strToEncrypt, String myKey) {
+	      try {
+	            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+	            byte[] key = myKey.getBytes("UTF-8");
+	            key = sha.digest(key);
+	            key = Arrays.copyOf(key, 16);
+	            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+	            return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+	      } catch (Exception e) {
+	            System.out.println(e.toString());
+	      }
+	      return null;
+	    }
+	
+	    public String decrypt(String strToDecrypt, String myKey) {
+	      try {
+	            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+	            byte[] key = myKey.getBytes("UTF-8");
+	            key = sha.digest(key);
+	            key = Arrays.copyOf(key, 16);
+	            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+	            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+	            return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+	      } catch (Exception e) {
+	            System.out.println(e.toString());
+	      }
+	      return null;
+	}
 }
