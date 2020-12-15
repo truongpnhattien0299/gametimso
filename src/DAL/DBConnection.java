@@ -10,7 +10,7 @@ public class DBConnection {
 		final String user = "N9sAqushb3";
 		final String pass = "5HZZmDRyKL";
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			return (Connection) DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
