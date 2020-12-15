@@ -80,7 +80,8 @@ public class Cl_Connect
 		 
 	 List<Rank> rankList = new ArrayList<Rank>();
 	 List<Rank_cl> rankList_cl = new ArrayList<Rank_cl>();
-	 
+	 while (true)
+	 {
 	 rankList = (List<Rank>) inobj.readObject();
 	 rankList.forEach((Rank) -> {
           Rank_cl rank_cl = new Rank_cl(Rank.getUserId(),Rank.getUsername(),Rank.getPoint(),Rank.getN_match(),Rank.getWin(),Rank.getLose()); 
@@ -89,8 +90,19 @@ public class Cl_Connect
 	 
 	 return rankList_cl;
 	 }
+	 }
+	 
+ public String user_rank() throws IOException, ClassNotFoundException {
+		 
+		 while (true)
+		 {
+	 String user = in.readLine();
+	 System.out.println("us"  +user);
+	 return user;
+		 }
 	 
 	 
+	 }
 	
 	
 	
