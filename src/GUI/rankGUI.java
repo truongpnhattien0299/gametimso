@@ -29,7 +29,7 @@ public class rankGUI extends JFrame {
     DefaultTableModel tableModel;
     JButton btnFind;
     private JScrollPane jScrollPane1;
-    private JTable tblrank;
+  private JTable tblrank;
     
 	  
     
@@ -91,7 +91,7 @@ public class rankGUI extends JFrame {
     	
         btnFind = new JButton("hi");
         JLabel rank_user = new JLabel();
-        rank_user.setText(cl.user_rank());
+//        rank_user.setText(cl.user_rank());
         rank_user.setBounds(50, 50, 50, 50);
         jScrollPane1 = new JScrollPane();
         tblrank = new JTable();
