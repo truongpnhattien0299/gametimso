@@ -34,7 +34,6 @@ import static Server.Server.minute;
 import static Server.Server.key;
 import static Server.Server.sonum;
 
-
 public class Worker implements Runnable {
 
 	BufferedReader in;
@@ -52,10 +51,6 @@ public class Worker implements Runnable {
 	String msg[];
 	String arr_result[];
 	private String user;
-	
-	
-	
-	
 
 	public Worker(Socket socket, String id, String user) {
 		this.socket = socket;
@@ -65,12 +60,11 @@ public class Worker implements Runnable {
 
 	public void run() {
 		System.out.println("Client " + socket.toString() + "accepted");
-		 
-		 System.out.println("key  :" +key);
+
+		System.out.println("key  :" + key);
 		try {
 			findAll();
 		} catch (ClassNotFoundException | IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
@@ -79,28 +73,16 @@ public class Worker implements Runnable {
 			outobj = new ObjectOutputStream(socket.getOutputStream());
 			inobj = new ObjectInputStream(socket.getInputStream());
 
-//			msg = (String[]) inobj.readObject();
-//			if (msg[0].equals("cl_login")) {
-//				System.out.println("dang nhap vao " + msg[0]);
-//				Login();
-//
-//			}
-
 			int vitri = 0;
-			
-			
-		   String mahoaKey = encrypt("key#"+key+"\n", "QuynhAnh") ;
-		   out.write(""+mahoaKey+"\n");
-		   out.flush();
-		   String mahoaso = encrypt("sonum#"+sonum+"\n", key) ;
-		   out.write(""+mahoaso+"\n");
-		   out.flush();
-		  
-		      
+			String mahoaKey = encrypt("key#" + key + "\n", "QuynhAnh");
+			out.write("" + mahoaKey + "\n");
+			out.flush();
+			String mahoaso = encrypt("sonum#" + sonum + "\n", key);
+			out.write("" + mahoaso + "\n");
+			out.flush();
 
 			while (true) {
-				
-				
+
 				String input = "";
 				input = in.readLine();
 				System.out.println("input : " + input);
@@ -110,16 +92,14 @@ public class Worker implements Runnable {
 
 				StringTokenizer cat1 = new StringTokenizer(giaima, "#");
 				String s1 = cat1.nextToken();
-				if(s1.equals("dangnhap"))
-				{
+				if (s1.equals("dangnhap")) {
 					String user = cat1.nextToken();
 					String pass = cat1.nextToken();
 					Login(user, pass);
-					
+
 				}
 
 				if (s1.equals("rank")) {
-					System.out.print("vao day");
 					List<Rank> rankList = new ArrayList<Rank>();
 					rankList = findAll();
 					String str = cat1.nextToken();
@@ -128,7 +108,7 @@ public class Worker implements Runnable {
 					outobj.writeObject(rankList);
 					outobj.flush();
 				}
-				
+
 				if (s1.equals("dangky")) {
 					String username = cat1.nextToken();
 					String password = cat1.nextToken();
@@ -214,20 +194,17 @@ public class Worker implements Runnable {
 
 								if (worker.idroom == idroom) {
 
-								
-
 									worker.outobj.writeObject(arr_num);
 									worker.outobj.flush();
 
 									String mahoa = encrypt("minute#" + minute + "\n", key);
 									worker.out.write("" + mahoa + "\n");
 									worker.out.flush();
-									
-
+									System.out.println("gui user 1");
 									mahoa = encrypt("user1#" + room.getPlayer1().user + "\n", key);
 									worker.out.write("" + mahoa + "\n");
 									worker.out.flush();
-
+									System.out.println("gui user 2");
 									mahoa = encrypt("user2#" + room.getPlayer2().user + "\n", key);
 									worker.out.write("" + mahoa + "\n");
 									worker.out.flush();
@@ -237,14 +214,12 @@ public class Worker implements Runnable {
 										worker.out.write("" + mahoa + "\n");
 										worker.out.flush();
 
-									}
-									else if(ktuutien(temp[0])) {
-										mahoa = encrypt("number#" +"uutien#"+temp[0] + "\n", key);
+									} else if (ktuutien(temp[0])) {
+										mahoa = encrypt("number#" + "uutien#" + temp[0] + "\n", key);
 										worker.out.write("" + mahoa + "\n");
 										worker.out.flush();
-									
-									}
-									else {
+
+									} else {
 										mahoa = encrypt("number#" + temp[0] + "\n", key);
 										worker.out.write("" + mahoa + "\n");
 										worker.out.flush();
@@ -256,7 +231,6 @@ public class Worker implements Runnable {
 							break;
 						}
 
-
 					}
 				}
 
@@ -264,8 +238,8 @@ public class Worker implements Runnable {
 
 				if (cat.countTokens() > 1) {
 					String s = cat.nextToken();
-					if(s.equals("huyplayer"))
-					{int dem = 0;
+					if (s.equals("huyplayer")) {
+						int dem = 0;
 						for (Worker worker : Server.workers) {
 							System.out.println("work trong for " + worker);
 							System.out.println("worker la : " + worker.id);
@@ -275,15 +249,13 @@ public class Worker implements Runnable {
 									System.out.println("worker vo la : " + worker.id);
 
 									if (room.getPlayer1().id == worker.id) {
-										
-										
-                                        room.setPlayer1(null);
+
+										room.setPlayer1(null);
 										break;
 									}
 									if (room.getPlayer2().id == worker.id) {
-										
-										
-										 room.setPlayer2(null);
+
+										room.setPlayer2(null);
 										break;
 									}
 								}
@@ -299,7 +271,7 @@ public class Worker implements Runnable {
 						s = cat.nextToken();
 						String id_num = cat.nextToken();
 						int dem = 0;
-    
+
 						for (Worker worker : Server.workers) {
 							System.out.println("work trong for " + worker);
 							System.out.println("worker la : " + worker.id);
@@ -392,9 +364,6 @@ public class Worker implements Runnable {
 						s = cat.nextToken();
 						int x = Integer.parseInt(s);
 
-						
-
-
 						if (x == temp[vitri]) {
 							for (Worker worker : Server.workers) {
 								if (worker.idroom == idroom) {
@@ -405,13 +374,13 @@ public class Worker implements Runnable {
 
 									}
 
-                                    else if(ktuutien(x)) {
-                                    	String mahoa = encrypt("dung#" + player + "#uutien#" +socket.getPort()+ "\n", key);
+									else if (ktuutien(x)) {
+										String mahoa = encrypt("dung#" + player + "#uutien#" + socket.getPort() + "\n",
+												key);
 										worker.out.write("" + mahoa + "\n");
 										worker.out.flush();
-									
-									}
-									else {
+
+									} else {
 										String mahoa = encrypt("dung#" + player + "#sothuong" + "\n", key);
 										worker.out.write("" + mahoa + "\n");
 //										worker.out.write("dung#" + player + "#sothuong" + "\n");
@@ -454,7 +423,6 @@ public class Worker implements Runnable {
 	}
 
 	public Boolean ktmayman(int sokt) {
-		
 
 		for (int i = 0; i < 25; i++) {
 			if (point_bonus[i] == sokt)
@@ -464,7 +432,6 @@ public class Worker implements Runnable {
 	}
 
 	public Boolean ktuutien(int sokt) {
-		
 
 		for (int i = 40; i < 60; i++) {
 			if (point_bonus[i] == sokt)
@@ -473,17 +440,17 @@ public class Worker implements Runnable {
 		return false;
 	}
 
-	public void Login(String user ,String pass) throws IOException, ClassNotFoundException {
+	public void Login(String user, String pass) throws IOException, ClassNotFoundException {
 
-		
 		PreparedStatement pst = null;
 		Connection conn = null;
 		try {
 			conn = ConnectDB.getConnection();
-			String sql = "SELECT *FROM user WHERE user=? and password=?";
+			System.out.println("3333");
+			String sql = "SELECT * FROM user WHERE user=? and password=?";
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			pst.setString(1, user);
-			pst.setString(2, pass);
+			pst.setString(2, hashMD5(pass));
 			ResultSet resultSet = pst.executeQuery();
 			if (resultSet.next()) {
 				this.user = user;
@@ -493,8 +460,6 @@ public class Worker implements Runnable {
 				result[1] = user;
 				result[2] = pass;
 
-//				os = socket.getOutputStream();
-//				ObjectOutputStream oos = new ObjectOutputStream(os);
 				outobj.writeObject(result);
 				outobj.flush();
 //				Random_So();
@@ -524,14 +489,17 @@ public class Worker implements Runnable {
 
 	public static List<Rank> findAll() throws IOException, ClassNotFoundException {
 
+		System.out.println("1");
 		List<Rank> rankList = new ArrayList<>();
+
 		PreparedStatement pst = null;
 		Connection conn = null;
+
 		try {
 			conn = ConnectDB.getConnection();
-			String sql = "SELECT *FROM history";
-			pst = (PreparedStatement) conn.prepareStatement(sql);
 
+			String sql = "SELECT * FROM history";
+			pst = (PreparedStatement) conn.prepareStatement(sql);
 			ResultSet resultSet = pst.executeQuery();
 			while (resultSet.next()) {
 
@@ -568,7 +536,7 @@ public class Worker implements Runnable {
 		return rankList;
 
 	}
-	
+
 	public String convertByteToHex(byte[] data) {
 		BigInteger number = new BigInteger(1, data);
 		String hashtext = number.toString(16);
@@ -701,7 +669,7 @@ public class Worker implements Runnable {
 			pst.setString(5, username);
 			pst.executeUpdate();
 			pst.close();
-			out.write("success#"+username+"#"+password+"\n");
+			out.write("success#" + username + "#" + password + "\n");
 			out.flush();
 			return;
 		} catch (SQLException e) {
@@ -748,5 +716,5 @@ public class Worker implements Runnable {
 		}
 		return null;
 	}
-	
+
 }

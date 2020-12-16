@@ -34,7 +34,6 @@ import static DAL.Cl_Connect.outobj;
 import static DAL.Cl_Connect.inobj;
 import static DAL.Cl_Connect.arr_result;
 
-
 //import static DAL.Cl_Connect.key;
 
 public class StartGUI {
@@ -47,26 +46,26 @@ public class StartGUI {
 	private JLabel label;
 
 	private JFrame mainJFrame;
-	private JButton num_bt, num_demo, num_pp,dauhang;
-	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start, numfind,Point1,Point2;
+	private JButton num_bt, num_demo, num_pp, dauhang;
+	private JLabel num_lbl, labelClock, lb_iconClock, Player1, Player2, Sound, Search, Start, numfind, Point1, Point2;
 	private JPanel mainJPanel;
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
 	private Timer thoigian2;// Tao doi tuong dem thoi gian
 
-	private Integer second, minute=0;
+	private Integer second, minute = 0;
 	private ArrayList<JButton> list_bt;
 	private ExecutorService executor;
-	private static int pointX=0;
-	private static int pointY=0;
+	private static int pointX = 0;
+	private static int pointY = 0;
 	private static int idGUI;
-	int secord2 =3;
+	int secord2 = 3;
 
 	public static int id_btn;
 	static boolean flag = false;
 	boolean winner;
 
-	int tong_num=0;
+	int tong_num = 0;
 	private int x = 27, y = 15, index;
 	private ArrayList<JButton> bt;
 	private static String value = "";
@@ -77,13 +76,10 @@ public class StartGUI {
 	private static int num;
 
 	public StartGUI() throws UnknownHostException, IOException {
-        key = cl.getKey();
-        num = cl.getNum();
-        
-       
+		key = cl.getKey();
+		num = cl.getNum();
 
 		StreamWorker();
-		
 
 	}
 
@@ -96,16 +92,16 @@ public class StartGUI {
 //		
 //			outobj = new ObjectOutputStream(socket.getOutputStream());
 //			inobj = new ObjectInputStream(socket.getInputStream());
-			
-			String mahoa =encrypt("room",key);
+
+			String mahoa = encrypt("room", key);
 			System.out.println("ma hoa  : " + mahoa);
-			out.write(""+mahoa+"\n");
+			out.write("" + mahoa + "\n");
 //			out.write("room\n");
 			out.flush();
 
 			arr = (Integer[]) inobj.readObject();
-			 System.out.println("arr leng :" +arr.length);
-		        System.out.println("num :" +num);			
+			System.out.println("arr leng :" + arr.length);
+			System.out.println("num :" + num);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -113,12 +109,12 @@ public class StartGUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		executor = Executors.newFixedThreadPool(1);
+		executor = Executors.newFixedThreadPool(2);
 		ReceiveFromServer recv = new ReceiveFromServer(socket, in);
 		executor.execute(recv);
 	}
 
-	//class da luong gui  nhan du lieu 2 thang hieu 
+	// class da luong gui nhan du lieu 2 thang hieu
 	public class ReceiveFromServer implements Runnable {
 		private Socket socket;
 		private BufferedReader in;
@@ -129,41 +125,38 @@ public class StartGUI {
 		}
 
 		public void run() {
-			idGUI=socket.getLocalPort();
-			stringtemp = "#"+idGUI;
-			
+			idGUI = socket.getLocalPort();
+			stringtemp = "#" + idGUI;
+
 			try {
-                createAndShow();
+				createAndShow();
 				while (true) {
 
 					if (oke == true) {
-					
+
 						String data = in.readLine();
-						secord2=3;
-						System.out.println("data la " +data);
-						String giaima=decrypt(data, key);
-						System.out.println("giai ma la " +giaima);
-                        
+						secord2 = 3;
+						System.out.println("data la " + data);
+						String giaima = decrypt(data, key);
+						System.out.println("giai ma la " + giaima);
+
 						StringTokenizer cat = new StringTokenizer(giaima.trim(), "#");
 						String s = cat.nextToken();
-						
-						
-						
-						
+
 						if (s.equals("user1")) {
-							s=cat.nextToken();
-							System.out.println("user 1 : " +s);
+							s = cat.nextToken();
+							System.out.println("user 1 : " + s);
 							Player1.setText(s);
 						}
-                        if (s.equals("user2")) {
-							s=cat.nextToken();
-							System.out.println("user 2 :"  + s );
+						if (s.equals("user2")) {
+							s = cat.nextToken();
+							System.out.println("user 2 :" + s);
 
 							Player2.setText(s);
-							
+
 						}
 						if (s.equals("minute")) {
-							minute = Integer.parseInt(cat.nextToken().trim());	
+							minute = Integer.parseInt(cat.nextToken().trim());
 //							System.out.println("so phut : " +minute);
 							thoigian = new Timer(1000, new ActionListener() {
 
@@ -177,50 +170,44 @@ public class StartGUI {
 									if (second_time.length() == 1) {
 										second_time = "0" + second_time;
 									}
-									
-									if(second == 0 && minute==0)
-									{
+
+									if (second == 0 && minute == 0) {
 										labelClock.setText(minute_time + ":" + second_time);
-										if(pointX>pointY)
-										{
+										if (pointX > pointY) {
 											JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
 											thoigian.stop();
 											try {
-												
+
 												String user1 = Player1.getText();
-												String mahoa =encrypt("play1Win#"+user1+"\n",key);
-												out.write(""+mahoa+"\n");
+												String mahoa = encrypt("play1Win#" + user1 + "\n", key);
+												out.write("" + mahoa + "\n");
 //												out.write("play1Win#"+user1+"\n");
 												out.flush();
 											} catch (IOException e1) {
 												// TODO Auto-generated catch block
 												e1.printStackTrace();
 											}
-											
-										}
-										else if(pointY>pointX)
-										{
+
+										} else if (pointY > pointX) {
 											JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
 											thoigian.stop();
 											try {
 												String user2 = Player2.getText();
-												String mahoa =encrypt("play2Win#"+user2+"\n",key);
-												out.write(""+mahoa+"\n");
+												String mahoa = encrypt("play2Win#" + user2 + "\n", key);
+												out.write("" + mahoa + "\n");
 //												out.write("play2Win#"+user2+"\n");
 												out.flush();
 											} catch (IOException e1) {
 												// TODO Auto-generated catch block
 												e1.printStackTrace();
 											}
-										}
-										else 
-										{
+										} else {
 											JOptionPane.showMessageDialog(mainJFrame, "Hoa");
 											thoigian.stop();
-											
+
 											try {
-												String mahoa =encrypt("hoa#"+"\n",key);
-												out.write(""+mahoa+"\n");
+												String mahoa = encrypt("hoa#" + "\n", key);
+												out.write("" + mahoa + "\n");
 //												out.write("hoa#"+"\n");
 												out.flush();
 											} catch (IOException e1) {
@@ -229,7 +216,7 @@ public class StartGUI {
 											}
 										}
 									}
-									
+
 									else if (second == 0) {
 										labelClock.setText(minute_time + ":" + second_time);
 										minute--;
@@ -249,8 +236,8 @@ public class StartGUI {
 						if (s.equals("s1_di")) {
 							s = cat.nextToken();
 							id_btn = Integer.parseInt(cat.nextToken());
-							String mahoa =encrypt("value#" + "s1#" + s + "\n",key);
-							out.write(""+mahoa+"\n");
+							String mahoa = encrypt("value#" + "s1#" + s + "\n", key);
+							out.write("" + mahoa + "\n");
 //							out.write("value#" + "s1#" + s + "\n");
 							out.flush();
 
@@ -258,8 +245,8 @@ public class StartGUI {
 						if (s.equals("s2_di")) {
 							s = cat.nextToken();
 							id_btn = Integer.parseInt(cat.nextToken());
-							String mahoa =encrypt("value#" + "s2#" + s + "\n",key);
-							out.write(""+mahoa+"\n");
+							String mahoa = encrypt("value#" + "s2#" + s + "\n", key);
+							out.write("" + mahoa + "\n");
 //							out.write("value#" + "s2#" + s + "\n");
 							out.flush();
 
@@ -267,27 +254,24 @@ public class StartGUI {
 
 						if (s.equals("number")) {
 							s = cat.nextToken();
-							if(s.equals("mayman"))
-							{
+							if (s.equals("mayman")) {
 								s = cat.nextToken();
-								numfind.setText("Lucky :"+s);
+								numfind.setText("Lucky :" + s);
 								numfind.setForeground(Color.RED);
 							}
-							
-							else if(s.equals("uutien"))
-							{
+
+							else if (s.equals("uutien")) {
 								s = cat.nextToken();
-								numfind.setText("Freeze:"+s);
+								numfind.setText("Freeze:" + s);
 								numfind.setForeground(Color.GREEN);
 							}
-							
-							else
-							{
-							
-							numfind.setText(s);
-							numfind.setForeground(Color.WHITE);
+
+							else {
+
+								numfind.setText(s);
+								numfind.setForeground(Color.WHITE);
 							}
-							
+
 						}
 
 						if (s.equals("dung")) {
@@ -295,12 +279,9 @@ public class StartGUI {
 							if (s.equals("s1")) {
 								s = cat.nextToken();
 								bt.get(id_btn).setBackground(Color.RED);
-								if(s.equals("mayman"))
-								{
-									pointX+=3;
-								}
-								else if(s.equals("uutien"))
-								{ 
+								if (s.equals("mayman")) {
+									pointX += 3;
+								} else if (s.equals("uutien")) {
 									pointX++;
 //									String port_1=cat.nextToken();
 //									System.out.println("port_1 : " +port_1);
@@ -399,35 +380,31 @@ public class StartGUI {
 //									thoigian2.start();
 //									
 //									
-									
-								}
-								else
-								pointX++;
-								
-								Point1.setText(""+pointX);
-								if(  pointX>(num/2)+25*3)
-								{    String user1 = Player1.getText();
-									 JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
-									 String mahoa =encrypt("play1Win#"+user1+"\n",key);
-										out.write(""+mahoa+"\n");
+
+								} else
+									pointX++;
+
+								Point1.setText("" + pointX);
+								if (pointX > (num / 2) + 25 * 3) {
+									String user1 = Player1.getText();
+									JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
+									String mahoa = encrypt("play1Win#" + user1 + "\n", key);
+									out.write("" + mahoa + "\n");
 //									 out.write("play1Win#"+user1+"\n");
-										out.flush();
-										thoigian.stop();
+									out.flush();
+									thoigian.stop();
 
 								}
 //								System.out.println("vao dung s1");
-							} 
-							
+							}
+
 							else if (s.equals("s2")) {
 								s = cat.nextToken();
 //								System.out.println("vao dung s2");
-								
-								if(s.equals("mayman"))
-								{
-									pointY+=3;
-								}
-								else if(s.equals("uutien"))
-								{ 
+
+								if (s.equals("mayman")) {
+									pointY += 3;
+								} else if (s.equals("uutien")) {
 									pointY++;
 //									String port_2=cat.nextToken();
 //								System.out.println("port_2 : " +port_2);
@@ -523,18 +500,16 @@ public class StartGUI {
 //									});
 //
 //									thoigian2.start();
-									
-									
-								}
-								else
-								pointY++;
-								
-								Point2.setText(""+pointY);
-								if( pointY>(num/2)+25*3)
-								{   String user2 = Player2.getText();
+
+								} else
+									pointY++;
+
+								Point2.setText("" + pointY);
+								if (pointY > (num / 2) + 25 * 3) {
+									String user2 = Player2.getText();
 									JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
-									String mahoa =encrypt("play2Win#"+user2+"\n",key);
-									out.write(""+mahoa+"\n");
+									String mahoa = encrypt("play2Win#" + user2 + "\n", key);
+									out.write("" + mahoa + "\n");
 //									out.write("play2Win#"+user2+"\n");
 									out.flush();
 									thoigian.stop();
@@ -542,9 +517,9 @@ public class StartGUI {
 								}
 								bt.get(id_btn).setBackground(Color.YELLOW);
 							}
-							String mahoa =encrypt("sotieptheo" + "\n",key);
+							String mahoa = encrypt("sotieptheo" + "\n", key);
 //							
-							out.write(""+mahoa+"\n");
+							out.write("" + mahoa + "\n");
 //							out.write("sotieptheo" + "\n");
 
 							out.flush();
@@ -555,15 +530,12 @@ public class StartGUI {
 				}
 			} catch (IOException e) {
 			}
-			
-			
-			
+
 		}
 	}
 
 	public void createAndShow() throws UnknownHostException, IOException {
 
-		
 		list_bt = new ArrayList<JButton>();
 
 		mainJFrame = new JFrame();
@@ -605,7 +577,7 @@ public class StartGUI {
 				num_pp.setHorizontalAlignment(SwingConstants.LEFT);
 				num_pp.setBounds(x, y, 48, 48);
 				num_pp.setBackground(new Color(0, 113, 139));
-				String stringCommand = Integer.toString(index - 1)+stringtemp;
+				String stringCommand = Integer.toString(index - 1) + stringtemp;
 				num_pp.setActionCommand(stringCommand);
 				num_pp.setText("" + arr[index - 1]);
 				num_pp.setForeground(Color.BLACK);
@@ -616,16 +588,16 @@ public class StartGUI {
 						String command = button.getActionCommand();
 						StringTokenizer cat = new StringTokenizer(command.trim(), "#");
 						String s = cat.nextToken();
-						
+
 						id_btn = Integer.parseInt(s);
 
 						value = button.getText();
 //						System.out.println("value click : " + value);
 
 						try {
-							String mahoa =encrypt("click#" + id_btn + "#" + value + "\n",key);
+							String mahoa = encrypt("click#" + id_btn + "#" + value + "\n", key);
 //							
-							out.write(""+mahoa+"\n");
+							out.write("" + mahoa + "\n");
 //							out.write("click#" + id_btn + "#" + value + "\n");
 							out.flush();
 
@@ -649,52 +621,46 @@ public class StartGUI {
 			x += 132;
 		}
 
-
 		labelClock.setBounds(1000, 20, 80, 20);
 		labelClock.setForeground(Color.WHITE);
 
 		mainJFrame.add(labelClock);
 		second = 0;
-		
 
-		
-		
 		Player1.setBounds(240, 20, 200, 20);
 		Player1.setForeground(Color.RED);
-		
+
 		mainJFrame.add(Player1);
 
-		
 		Point1.setBounds(442, 20, 80, 20);
 		Point1.setForeground(Color.BLACK);
-		Point1.setText(""+pointX);
+		Point1.setText("" + pointX);
 		mainJFrame.add(Point1);
-		
+
 		numfind.setBounds(550, 20, 80, 20);
 		numfind.setForeground(Color.WHITE);
 		mainJFrame.add(numfind);
 
 		Player2.setBounds(660, 18, 200, 20);
 		Player2.setForeground(Color.YELLOW);
-		
+
 		mainJFrame.add(Player2);
-		
-		
+
 		Point2.setBounds(862, 18, 80, 20);
 		Point2.setForeground(Color.BLACK);
-		Point2.setText(""+pointY);
+		Point2.setText("" + pointY);
 		mainJFrame.add(Point2);
-		
+
 		dauhang.setBounds(990, 18, 100, 25);
 		dauhang.setForeground(Color.ORANGE);
 		dauhang.setBackground(Color.LIGHT_GRAY);
-		dauhang.setText("Đầu hàng");
+		dauhang.setText("Ä�áº§u hÃ ng");
 		mainJFrame.add(dauhang);
 //		dauhang.addActionListener(new ActionListener() {
 //			
 //			@Override
 //			public void actionPerformed(ActionEvent e) {
-//				int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn đầu hàng không?",
+//				int hoi = JOptionPane.showConfirmDialog(null, "Báº¡n cÃ³ muá»‘n Ä‘áº§u hÃ ng khÃ´ng?",
 //		                null, JOptionPane.YES_NO_OPTION);
 //		        if (hoi == JOptionPane.YES_OPTION) {
 //		        	String mahoa = encrypt("huyplayer#"+"\n", key);
@@ -767,14 +733,14 @@ public class StartGUI {
 		mainJFrame.getContentPane().setBackground(new Color(0, 74, 80));
 		mainJFrame.setVisible(true);
 		mainJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 //		mainJFrame.addWindowListener(new WindowAdapter() {
 //		    public void windowClosed(WindowEvent e) {
-//		        JOptionPane.showConfirmDialog(null, "Không có gì xảy ra với sự kiện này nếu tự đối tượng bắt sự kiện này?",
+//		        JOptionPane.showConfirmDialog(null, "KhÃ´ng cÃ³ gÃ¬ xáº£y ra vá»›i sá»± kiá»‡n nÃ y náº¿u tá»± Ä‘á»‘i tÆ°á»£ng báº¯t sá»± kiá»‡n nÃ y?",
 //		                null, JOptionPane.YES_NO_OPTION);
 //		    }
 //		    public void windowClosing(WindowEvent e) {
-//		        int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát game không?",
+//		        int hoi = JOptionPane.showConfirmDialog(null, "Báº¡n cÃ³ muá»‘n thoÃ¡t game khÃ´ng?",
 //		                null, JOptionPane.YES_NO_OPTION);
 //		        if (hoi == JOptionPane.YES_OPTION) {
 //		        	String mahoa = encrypt("huyplayer#"+"\n", key);
@@ -798,13 +764,6 @@ public class StartGUI {
 //		        }
 //		    }
 //		});
-		
-		
-		
-		
-		
-		
-		
 
 	}
 
@@ -872,36 +831,35 @@ public class StartGUI {
 //
 //	}
 
-	
 	public String encrypt(String strToEncrypt, String myKey) {
-	      try {
-	            MessageDigest sha = MessageDigest.getInstance("SHA-1");
-	            byte[] key = myKey.getBytes("UTF-8");
-	            key = sha.digest(key);
-	            key = Arrays.copyOf(key, 16);
-	            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-	            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-	            return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
-	      } catch (Exception e) {
-	            System.out.println(e.toString());
-	      }
-	      return null;
-	    }
-	
-	    public String decrypt(String strToDecrypt, String myKey) {
-	      try {
-	            MessageDigest sha = MessageDigest.getInstance("SHA-1");
-	            byte[] key = myKey.getBytes("UTF-8");
-	            key = sha.digest(key);
-	            key = Arrays.copyOf(key, 16);
-	            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-	            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-	            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-	            return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
-	      } catch (Exception e) {
-	            System.out.println(e.toString());
-	      }
-	      return null;
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			byte[] key = myKey.getBytes("UTF-8");
+			key = sha.digest(key);
+			key = Arrays.copyOf(key, 16);
+			SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			return java.util.Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
+	}
+
+	public String decrypt(String strToDecrypt, String myKey) {
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-1");
+			byte[] key = myKey.getBytes("UTF-8");
+			key = sha.digest(key);
+			key = Arrays.copyOf(key, 16);
+			SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			return new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return null;
 	}
 }

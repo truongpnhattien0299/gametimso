@@ -265,13 +265,7 @@ public class SignUp extends JFrame {
 					{
 						JOptionPane.showConfirmDialog(rootPane, "Đã cập nhật thành công", "Error", 1);
 						dispose();
-						try {
-							new StartGUI();
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						new StartPanel2();
 					}
 				}
 				else
