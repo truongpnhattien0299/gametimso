@@ -34,6 +34,7 @@ import static DAL.Cl_Connect.outobj;
 import static DAL.Cl_Connect.inobj;
 import static DAL.Cl_Connect.arr_result;
 
+
 //import static DAL.Cl_Connect.key;
 
 public class StartGUI {
@@ -51,12 +52,15 @@ public class StartGUI {
 	private JPanel mainJPanel;
 	private JTextField enterChat;
 	private Timer thoigian;// Tao doi tuong dem thoi gian
+	private Timer thoigian2;// Tao doi tuong dem thoi gian
+
 	private Integer second, minute=0;
 	private ArrayList<JButton> list_bt;
 	private ExecutorService executor;
 	private static int pointX=0;
 	private static int pointY=0;
 	private static int idGUI;
+	int secord2 =3;
 
 	public static int id_btn;
 	static boolean flag = false;
@@ -70,9 +74,14 @@ public class StartGUI {
 	public static DAL.Cl_Connect cl;
 	private static String key;
 	private static String stringtemp;
+	private static int num;
 
 	public StartGUI() throws UnknownHostException, IOException {
         key = cl.getKey();
+        num = cl.getNum();
+        
+       
+
 		StreamWorker();
 		
 
@@ -95,8 +104,8 @@ public class StartGUI {
 			out.flush();
 
 			arr = (Integer[]) inobj.readObject();
-			System.out.println("arr la : " + arr);
-			
+			 System.out.println("arr leng :" +arr.length);
+		        System.out.println("num :" +num);			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -109,6 +118,7 @@ public class StartGUI {
 		executor.execute(recv);
 	}
 
+	//class da luong gui  nhan du lieu 2 thang hieu 
 	public class ReceiveFromServer implements Runnable {
 		private Socket socket;
 		private BufferedReader in;
@@ -129,13 +139,11 @@ public class StartGUI {
 					if (oke == true) {
 					
 						String data = in.readLine();
+						secord2=3;
 						System.out.println("data la " +data);
 						String giaima=decrypt(data, key);
 						System.out.println("giai ma la " +giaima);
-                        if(giaima==null)
-                        {
-                        	break;
-                        }
+                        
 						StringTokenizer cat = new StringTokenizer(giaima.trim(), "#");
 						String s = cat.nextToken();
 						
@@ -279,13 +287,11 @@ public class StartGUI {
 							numfind.setText(s);
 							numfind.setForeground(Color.WHITE);
 							}
+							
 						}
 
 						if (s.equals("dung")) {
 							s = cat.nextToken();
-
-							System.out.println("vao dung ");
-
 							if (s.equals("s1")) {
 								s = cat.nextToken();
 								bt.get(id_btn).setBackground(Color.RED);
@@ -293,23 +299,113 @@ public class StartGUI {
 								{
 									pointX+=3;
 								}
-								if(s.equals("uutien"))
-								{
-									for (int i = 1; i <= 10; i++) {
-										for (int j = 1; j <= 10; j++) {
-											index = i * 10 + j - 10;
-											if (index == 100)
-												break;
-											
-											
-										}
-									}
+								else if(s.equals("uutien"))
+								{ 
+									pointX++;
+//									String port_1=cat.nextToken();
+//									System.out.println("port_1 : " +port_1);
+//									for (int i = 1; i <= (num/10); i++) {
+//										for (int j = 1; j <= 10; j++) {
+//											index = i * 10 + j - 10;
+//											if (index == num-1)
+//												break;
+////											System.out.println("stringcommand : " +stringCommand );
+////											num_pp.setActionCommand(stringCommand);
+////											num_pp.setText("" + arr[index - 1]);
+////											num_pp.setForeground(Color.BLACK);
+////											System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
+//											String temp  = bt.get(index - 1).getActionCommand();
+//											StringTokenizer cat1 = new StringTokenizer(temp, "#");
+//											String s1 = cat1.nextToken();
+//											String s2=cat1.nextToken();
+//											System.out.println("port socket la  : "+socket.getLocalPort());
+//											System.out.println("s2 la  : "+s2);
+//
+//											if( Integer.parseInt(s2) !=Integer.parseInt(port_1));
+//											{
+//											
+//												bt.get(index - 1).addActionListener(new ActionListener() {
+//													@Override
+//													public void actionPerformed(ActionEvent e) {
+//														JButton button = (JButton) e.getSource();
+//														String command = button.getActionCommand();
+//														StringTokenizer cat1 = new StringTokenizer(temp, "#");
+//														String t1 = cat1.nextToken();
+//														String t2=cat1.nextToken();
+//														if( Integer.parseInt(t2) !=Integer.parseInt(port_1))
+//														{
+//															bt.get(index-1).setVisible(false);
+//														}
+//														
+//
+//														
+//
+//														
+//
+//													}
+//												});
+//											}
+//												
+//											
+//											
+//											
+//										}
+//									}
+//									
+//									System.out.println("secord now: "  +secord2);
+//									thoigian2 = new Timer(1000, new ActionListener() {
+//                                        
+//										@Override
+//										public void actionPerformed(ActionEvent e) {
+////											
+//											
+//											
+//											secord2--;
+//											System.out.println("SECORD LA "  +	secord2);
+//											if(secord2<=0)
+//											{
+//												
+//												thoigian2.stop();
+//												for (int i = 1; i <= 10; i++) {
+//													for (int j = 1; j <= 10; j++) {
+//														index = i * 10 + j - 10;
+//														if (index == 100)
+//															break;
+////														System.out.println("stringcommand : " +stringCommand );
+////														num_pp.setActionCommand(stringCommand);
+////														num_pp.setText("" + arr[index - 1]);
+////														num_pp.setForeground(Color.BLACK);
+////														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
+////														String temp  = bt.get(index - 1).getActionCommand();
+////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
+////														String s1 = cat1.nextToken();
+////														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
+////														{
+////															System.out.println("localport :" +socket.getLocalPort());
+//															bt.get(index - 1).setVisible(true);
+////														}
+//															
+//														
+//														
+//														
+//													}
+//												}
+//												
+//											}
+//										}
+//
+//									});
+//
+//									thoigian2.start();
+//									
+//									
+									
 								}
 								else
 								pointX++;
 								
 								Point1.setText(""+pointX);
-								if( pointX>(arr.length/2))
+								if(  pointX>(num/2)+25*3)
 								{    String user1 = Player1.getText();
 									 JOptionPane.showMessageDialog(mainJFrame, "Player 1 Win");
 									 String mahoa =encrypt("play1Win#"+user1+"\n",key);
@@ -330,15 +426,111 @@ public class StartGUI {
 								{
 									pointY+=3;
 								}
-								if(s.equals("uutien"))
-								{
-									JOptionPane.showMessageDialog(mainJFrame, "dume may");
+								else if(s.equals("uutien"))
+								{ 
+									pointY++;
+//									String port_2=cat.nextToken();
+//								System.out.println("port_2 : " +port_2);
+//									for (int i = 1; i <= 10; i++) {
+//										for (int j = 1; j <= 10; j++) {
+//											index = i * 10 + j - 10;
+//											if (index == 100)
+//												break;
+////											System.out.println("stringcommand : " +stringCommand );
+////											num_pp.setActionCommand(stringCommand);
+////											num_pp.setText("" + arr[index - 1]);
+////											num_pp.setForeground(Color.BLACK);
+//										
+//											String temp  = bt.get(index - 1).getActionCommand();
+//											StringTokenizer cat1 = new StringTokenizer(temp, "#");
+//											String s1 = cat1.nextToken();
+//											String s2=cat1.nextToken();
+//											System.out.println("port socket la  : "+socket.getLocalPort());
+//											System.out.println("s2 la  : "+s2);
+//											if( Integer.parseInt(s2) != Integer.parseInt(port_2) )
+//											{
+//												bt.get(index - 1).setVisible(false);
+//												
+////												.addActionListener(new ActionListener() {
+////													@Override
+////													public void actionPerformed(ActionEvent e) {
+////														JButton button = (JButton) e.getSource();
+////														String command = button.getActionCommand();
+////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
+////														String t1 = cat1.nextToken();
+////														String t2=cat1.nextToken();
+////														if( Integer.parseInt(t2) !=Integer.parseInt(port_2))
+////														{
+////															bt.get(index-1).setVisible(false);
+////														}
+////														
+////
+////														
+////
+////														
+////
+////													}
+////												});
+//											}
+//												
+//											
+//											
+//											
+//										}
+//									}
+//									System.out.println("secord now: "  +secord2);
+//									thoigian2 = new Timer(1000, new ActionListener() {
+//                                        
+//										@Override
+//										public void actionPerformed(ActionEvent e) {
+////											
+//											
+//											
+//											secord2--;
+//											System.out.println("SECORD LA "  +	secord2);
+//											if(secord2<=0)
+//											{
+//												
+//												thoigian2.stop();
+//												for (int i = 1; i <= 10; i++) {
+//													for (int j = 1; j <= 10; j++) {
+//														index = i * 10 + j - 10;
+//														if (index == 100)
+//															break;
+////														System.out.println("stringcommand : " +stringCommand );
+////														num_pp.setActionCommand(stringCommand);
+////														num_pp.setText("" + arr[index - 1]);
+////														num_pp.setForeground(Color.BLACK);
+////														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
+////														String temp  = bt.get(index - 1).getActionCommand();
+////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
+////														String s1 = cat1.nextToken();
+////														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
+////														{
+////															System.out.println("localport :" +socket.getLocalPort());
+//															bt.get(index - 1).setVisible(true);
+////														}
+//															
+//														
+//														
+//														
+//													}
+//												}
+//												
+//											}
+//										}
+//
+//									});
+//
+//									thoigian2.start();
+									
+									
 								}
 								else
 								pointY++;
 								
 								Point2.setText(""+pointY);
-								if( pointY>(arr.length/2))
+								if( pointY>(num/2)+25*3)
 								{   String user2 = Player2.getText();
 									JOptionPane.showMessageDialog(mainJFrame, "Player 2 Win");
 									String mahoa =encrypt("play2Win#"+user2+"\n",key);
@@ -414,7 +606,6 @@ public class StartGUI {
 				num_pp.setBounds(x, y, 48, 48);
 				num_pp.setBackground(new Color(0, 113, 139));
 				String stringCommand = Integer.toString(index - 1)+stringtemp;
-				System.out.println("stringcommand : " +stringCommand );
 				num_pp.setActionCommand(stringCommand);
 				num_pp.setText("" + arr[index - 1]);
 				num_pp.setForeground(Color.BLACK);
@@ -499,35 +690,35 @@ public class StartGUI {
 		dauhang.setBackground(Color.LIGHT_GRAY);
 		dauhang.setText("Đầu hàng");
 		mainJFrame.add(dauhang);
-		dauhang.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn đầu hàng không?",
-		                null, JOptionPane.YES_NO_OPTION);
-		        if (hoi == JOptionPane.YES_OPTION) {
-		        	String mahoa = encrypt("huyplayer#"+"\n", key);
-		        	try {
-		        		thoigian.stop();
-		        		 arr = new Integer[100];
-						out.write(""+mahoa+"\n");
-						out.flush();
-						mahoa=encrypt("room",key);
-						out.write(""+mahoa+"\n");
-						out.flush();
-						  new StartPanel2();
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        	
-		        	
-		          
-		        }
-				
-			}
-		});
+//		dauhang.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn đầu hàng không?",
+//		                null, JOptionPane.YES_NO_OPTION);
+//		        if (hoi == JOptionPane.YES_OPTION) {
+//		        	String mahoa = encrypt("huyplayer#"+"\n", key);
+//		        	try {
+//		        		thoigian.stop();
+////		        		 arr = new Integer[100];
+//						out.write(""+mahoa+"\n");
+//						out.flush();
+//						mahoa=encrypt("room",key);
+//						out.write(""+mahoa+"\n");
+//						out.flush();
+//						  new StartPanel2();
+//						
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//		        	
+//		        	
+//		          
+//		        }
+//				
+//			}
+//		});
 		try {
 			BufferedImage image = ImageIO.read(new File("./image/dongho.jpg"));
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(45, 45, image.SCALE_SMOOTH));
@@ -575,38 +766,38 @@ public class StartGUI {
 		mainJFrame.setLocationRelativeTo(null);
 		mainJFrame.getContentPane().setBackground(new Color(0, 74, 80));
 		mainJFrame.setVisible(true);
-//		mainJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		mainJFrame.addWindowListener(new WindowAdapter() {
-		    public void windowClosed(WindowEvent e) {
-		        JOptionPane.showConfirmDialog(null, "Không có gì xảy ra với sự kiện này nếu tự đối tượng bắt sự kiện này?",
-		                null, JOptionPane.YES_NO_OPTION);
-		    }
-		    public void windowClosing(WindowEvent e) {
-		        int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát game không?",
-		                null, JOptionPane.YES_NO_OPTION);
-		        if (hoi == JOptionPane.YES_OPTION) {
-		        	String mahoa = encrypt("huyplayer#"+"\n", key);
-		        	try {
-		        		thoigian.stop();
-		        		 arr = new Integer[100];
-
-						out.write(""+mahoa+"\n");
-						out.flush();
-						mahoa=encrypt("room",key);
-						out.write(""+mahoa+"\n");
-						out.flush();
-						
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-		        	
-		        	thoigian.stop();
-		            new StartPanel2();
-		        }
-		    }
-		});
+//		mainJFrame.addWindowListener(new WindowAdapter() {
+//		    public void windowClosed(WindowEvent e) {
+//		        JOptionPane.showConfirmDialog(null, "Không có gì xảy ra với sự kiện này nếu tự đối tượng bắt sự kiện này?",
+//		                null, JOptionPane.YES_NO_OPTION);
+//		    }
+//		    public void windowClosing(WindowEvent e) {
+//		        int hoi = JOptionPane.showConfirmDialog(null, "Bạn có muốn thoát game không?",
+//		                null, JOptionPane.YES_NO_OPTION);
+//		        if (hoi == JOptionPane.YES_OPTION) {
+//		        	String mahoa = encrypt("huyplayer#"+"\n", key);
+//		        	try {
+//		        		thoigian.stop();
+//		        		 arr = new Integer[100];
+//
+//						out.write(""+mahoa+"\n");
+//						out.flush();
+//						mahoa=encrypt("room",key);
+//						out.write(""+mahoa+"\n");
+//						out.flush();
+//						
+//					} catch (IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//		        	
+//		        	thoigian.stop();
+//		            new StartPanel2();
+//		        }
+//		    }
+//		});
 		
 		
 		

@@ -13,11 +13,11 @@ public class Random_So{
 	
 	}
 	
-	public Integer[] so() {
+	public Integer[] so(int x) {
 
 		
-		Integer[] arr = new Integer[100];
-		Integer[] arr_num = new Integer[99];
+		Integer[] arr = new Integer[x];
+		Integer[] arr_num = new Integer[x-1];
 	    for (int i = 0; i <arr.length-1; i++) {
 	        arr_num[i] = i+1;
 	        

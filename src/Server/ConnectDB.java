@@ -7,9 +7,9 @@ import com.mysql.jdbc.Connection;
 
 public class ConnectDB {
 	public static Connection getConnection() throws SQLException{
-		final String url  ="jdbc:mysql://remotemysql.com/N9sAqushb3?autoReconnect=true&useSSL=false";
-		final String user = "N9sAqushb3";
-		final String pass = "5HZZmDRyKL";
+		final String url  ="jdbc:mysql://localhost:3306/demso?autoReconnect=true&useSSL=false";
+		final String user = "root";
+		final String pass = "";
 		try {
             Class.forName("com.mysql.jdbc.Driver");
             return (Connection) DriverManager.getConnection(url, user, pass);

@@ -25,6 +25,8 @@ import static DAL.Cl_Connect.inobj;
 
 import GUI.LoginGUI.ButtonLogin;
 import static DAL.Cl_Connect.arr_result;
+import static DAL.Cl_Connect.key;;
+
 
 public class StartPanel2 extends JFrame {
 
@@ -34,7 +36,6 @@ public class StartPanel2 extends JFrame {
 	JButton rankButton;
 	JButton exitButton;
 	public JLabel lb_user;
-	String key = "3";
 
 //    SoundPlayer mySound = new SoundPlayer();
 
@@ -51,7 +52,7 @@ public class StartPanel2 extends JFrame {
 		ImagePanel background = new ImagePanel("background1.png", 0, 0, 800, 600);
 
 		oneButton = new JButton("Play");
-		btninfo = new JButton("Update Infomation");
+		btninfo = new JButton("Update");
 		rankButton = new JButton("Rank");
 		exitButton = new JButton("Exit");
 
