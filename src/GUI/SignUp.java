@@ -291,7 +291,6 @@ public class SignUp extends JFrame {
 			cl = new DAL.Cl_Connect();
 			cl.CreateSocket("127.0.0.1", 1234);
 			check = cl.Signup(user, pass, hoten, gender, dob);
-
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

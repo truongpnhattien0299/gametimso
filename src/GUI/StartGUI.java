@@ -251,7 +251,6 @@ public class StartGUI {
 							out.write("" + mahoa + "\n");
 //							out.write("value#" + "s2#" + s + "\n");
 							out.flush();
-
 						}
 
 						if (s.equals("number")) {
