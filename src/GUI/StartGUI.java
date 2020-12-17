@@ -179,7 +179,8 @@ public class StartGUI {
 											try {
 
 												String user1 = Player1.getText();
-												String mahoa = encrypt("play1Win#" + user1 + "\n", key);
+												String user2 = Player2.getText();
+												String mahoa = encrypt("play1Win#" + user1 + "#" + user2 + "\n", key);
 												out.write("" + mahoa + "\n");
 //												out.write("play1Win#"+user1+"\n");
 												out.flush();
@@ -193,7 +194,8 @@ public class StartGUI {
 											thoigian.stop();
 											try {
 												String user2 = Player2.getText();
-												String mahoa = encrypt("play2Win#" + user2 + "\n", key);
+												String user1 = Player1.getText();
+												String mahoa = encrypt("play2Win#" + user2 + "#" + user1 + "\n", key);
 												out.write("" + mahoa + "\n");
 //												out.write("play2Win#"+user2+"\n");
 												out.flush();

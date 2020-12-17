@@ -319,7 +319,26 @@ public class Worker implements Runnable {
 
 							int id_user = resultSet.getInt("id");
 
-							String sql2 = "UPDATE history SET point=point+1  WHERE userId=?";
+							String sql2 = "UPDATE history SET point=point+3, N_match = N_match+1  WHERE userId=?";
+							pst = (PreparedStatement) conn.prepareStatement(sql2);
+							pst.setInt(1, id_user);
+
+							int resultSet2 = pst.executeUpdate();
+							if (resultSet2 == 1) {
+								System.out.println("update");
+							}
+
+						}
+						sql = "SELECT * FROM user WHERE user=?";
+						pst = (PreparedStatement) conn.prepareStatement(sql);
+						pst.setString(1, cat.nextToken());
+
+						ResultSet resultSet1 = pst.executeQuery();
+						if (resultSet1.next()) {
+
+							int id_user = resultSet1.getInt("id");
+
+							String sql2 = "UPDATE history SET N_match = N_match+1  WHERE userId=?";
 							pst = (PreparedStatement) conn.prepareStatement(sql2);
 							pst.setInt(1, id_user);
 
@@ -347,7 +366,26 @@ public class Worker implements Runnable {
 
 							int id_user = resultSet.getInt("id");
 
-							String sql2 = "UPDATE history SET point=point+3  WHERE userId=?";
+							String sql2 = "UPDATE history SET point=point+3, N_match = N_match+1  WHERE userId=?";
+							pst = (PreparedStatement) conn.prepareStatement(sql2);
+							pst.setInt(1, id_user);
+
+							int resultSet2 = pst.executeUpdate();
+							if (resultSet2 == 1) {
+								System.out.println("update");
+							}
+
+						}
+						sql = "SELECT * FROM user WHERE user=?";
+						pst = (PreparedStatement) conn.prepareStatement(sql);
+						pst.setString(1, cat.nextToken());
+
+						ResultSet resultSet1 = pst.executeQuery();
+						if (resultSet1.next()) {
+
+							int id_user = resultSet1.getInt("id");
+
+							String sql2 = "UPDATE history SET N_match = N_match+1 WHERE userId=?";
 							pst = (PreparedStatement) conn.prepareStatement(sql2);
 							pst.setInt(1, id_user);
 
