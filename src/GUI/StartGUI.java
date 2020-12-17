@@ -284,103 +284,80 @@ public class StartGUI {
 									pointX += 3;
 								} else if (s.equals("uutien")) {
 									pointX++;
-//									String port_1=cat.nextToken();
-//									System.out.println("port_1 : " +port_1);
-//									for (int i = 1; i <= (num/10); i++) {
-//										for (int j = 1; j <= 10; j++) {
-//											index = i * 10 + j - 10;
-//											if (index == num-1)
-//												break;
-////											System.out.println("stringcommand : " +stringCommand );
-////											num_pp.setActionCommand(stringCommand);
-////											num_pp.setText("" + arr[index - 1]);
-////											num_pp.setForeground(Color.BLACK);
-////											System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
-//											String temp  = bt.get(index - 1).getActionCommand();
-//											StringTokenizer cat1 = new StringTokenizer(temp, "#");
-//											String s1 = cat1.nextToken();
-//											String s2=cat1.nextToken();
-//											System.out.println("port socket la  : "+socket.getLocalPort());
-//											System.out.println("s2 la  : "+s2);
-//
-//											if( Integer.parseInt(s2) !=Integer.parseInt(port_1));
-//											{
+									String port_1=cat.nextToken();
+									System.out.println("port_1 : " +port_1);
+									for (int i = 1; i <= (num/10); i++) {
+										for (int j = 1; j <= 10; j++) {
+											index = i * 10 + j - 10;
+											if (index == num-1)
+												break;
+											String temp = bt.get(index - 1).getActionCommand();
+											StringTokenizer cat1 = new StringTokenizer(temp, "#");
+											String s1 = cat1.nextToken();
+											String s2 = cat1.nextToken();
+											System.out.println("port socket la  : " + socket.getLocalPort());
+											System.out.println("s2 la  : " + s2);
+											if (Integer.parseInt(s2) == Integer.parseInt(port_1)) {
+												bt.get(index - 1).setVisible(false);											
+
+										}
+
+
+											
+												
+											
+											
+											
+										}
+									}
+									
+									System.out.println("secord now: "  +secord2);
+									thoigian2 = new Timer(1000, new ActionListener() {
+                                        
+										@Override
+										public void actionPerformed(ActionEvent e) {
 //											
-//												bt.get(index - 1).addActionListener(new ActionListener() {
-//													@Override
-//													public void actionPerformed(ActionEvent e) {
-//														JButton button = (JButton) e.getSource();
-//														String command = button.getActionCommand();
+											
+											
+											secord2--;
+											System.out.println("SECORD LA "  +	secord2);
+											if(secord2<=0)
+											{
+												
+												thoigian2.stop();
+												for (int i = 1; i <= 10; i++) {
+													for (int j = 1; j <= 10; j++) {
+														index = i * 10 + j - 10;
+														if (index == 100)
+															break;
+//														System.out.println("stringcommand : " +stringCommand );
+//														num_pp.setActionCommand(stringCommand);
+//														num_pp.setText("" + arr[index - 1]);
+//														num_pp.setForeground(Color.BLACK);
+//														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
+//														String temp  = bt.get(index - 1).getActionCommand();
 //														StringTokenizer cat1 = new StringTokenizer(temp, "#");
-//														String t1 = cat1.nextToken();
-//														String t2=cat1.nextToken();
-//														if( Integer.parseInt(t2) !=Integer.parseInt(port_1))
+//														String s1 = cat1.nextToken();
+//														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
 //														{
-//															bt.get(index-1).setVisible(false);
+//															System.out.println("localport :" +socket.getLocalPort());
+															bt.get(index - 1).setVisible(true);
 //														}
-//														
-//
-//														
-//
-//														
-//
-//													}
-//												});
-//											}
-//												
-//											
-//											
-//											
-//										}
-//									}
-//									
-//									System.out.println("secord now: "  +secord2);
-//									thoigian2 = new Timer(1000, new ActionListener() {
-//                                        
-//										@Override
-//										public void actionPerformed(ActionEvent e) {
-////											
-//											
-//											
-//											secord2--;
-//											System.out.println("SECORD LA "  +	secord2);
-//											if(secord2<=0)
-//											{
-//												
-//												thoigian2.stop();
-//												for (int i = 1; i <= 10; i++) {
-//													for (int j = 1; j <= 10; j++) {
-//														index = i * 10 + j - 10;
-//														if (index == 100)
-//															break;
-////														System.out.println("stringcommand : " +stringCommand );
-////														num_pp.setActionCommand(stringCommand);
-////														num_pp.setText("" + arr[index - 1]);
-////														num_pp.setForeground(Color.BLACK);
-////														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
-////														String temp  = bt.get(index - 1).getActionCommand();
-////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
-////														String s1 = cat1.nextToken();
-////														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
-////														{
-////															System.out.println("localport :" +socket.getLocalPort());
-//															bt.get(index - 1).setVisible(true);
-////														}
-//															
-//														
-//														
-//														
-//													}
-//												}
-//												
-//											}
-//										}
-//
-//									});
-//
-//									thoigian2.start();
-//									
-//									
+															
+														
+														
+														
+													}
+												}
+												
+											}
+										}
+
+									});
+
+									thoigian2.start();
+									
+									
 
 								} else
 									pointX++;
@@ -407,100 +384,76 @@ public class StartGUI {
 									pointY += 3;
 								} else if (s.equals("uutien")) {
 									pointY++;
-//									String port_2=cat.nextToken();
-//								System.out.println("port_2 : " +port_2);
-//									for (int i = 1; i <= 10; i++) {
-//										for (int j = 1; j <= 10; j++) {
-//											index = i * 10 + j - 10;
-//											if (index == 100)
-//												break;
-////											System.out.println("stringcommand : " +stringCommand );
-////											num_pp.setActionCommand(stringCommand);
-////											num_pp.setText("" + arr[index - 1]);
-////											num_pp.setForeground(Color.BLACK);
-//										
-//											String temp  = bt.get(index - 1).getActionCommand();
-//											StringTokenizer cat1 = new StringTokenizer(temp, "#");
-//											String s1 = cat1.nextToken();
-//											String s2=cat1.nextToken();
-//											System.out.println("port socket la  : "+socket.getLocalPort());
-//											System.out.println("s2 la  : "+s2);
-//											if( Integer.parseInt(s2) != Integer.parseInt(port_2) )
-//											{
-//												bt.get(index - 1).setVisible(false);
-//												
-////												.addActionListener(new ActionListener() {
-////													@Override
-////													public void actionPerformed(ActionEvent e) {
-////														JButton button = (JButton) e.getSource();
-////														String command = button.getActionCommand();
-////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
-////														String t1 = cat1.nextToken();
-////														String t2=cat1.nextToken();
-////														if( Integer.parseInt(t2) !=Integer.parseInt(port_2))
-////														{
-////															bt.get(index-1).setVisible(false);
-////														}
-////														
-////
-////														
-////
-////														
-////
-////													}
-////												});
-//											}
-//												
+									String port_2=cat.nextToken();
+								System.out.println("port_2 : " +port_2);
+									for (int i = 1; i <= 10; i++) {
+										for (int j = 1; j <= 10; j++) {
+											index = i * 10 + j - 10;
+											if (index == 100)
+												break;
+											String temp = bt.get(index - 1).getActionCommand();
+											StringTokenizer cat1 = new StringTokenizer(temp, "#");
+											String s1 = cat1.nextToken();
+											String s2 = cat1.nextToken();
+											System.out.println("port socket la  : " + socket.getLocalPort());
+											System.out.println("s2 la  : " + s2);
+											if (Integer.parseInt(s2) == Integer.parseInt(port_2)) {
+												bt.get(index - 1).setVisible(false);											
+
+										}
+
+										
+												
+											
+											
+											
+										}
+									}
+									System.out.println("secord now: "  +secord2);
+									thoigian2 = new Timer(1000, new ActionListener() {
+                                        
+										@Override
+										public void actionPerformed(ActionEvent e) {
 //											
-//											
-//											
-//										}
-//									}
-//									System.out.println("secord now: "  +secord2);
-//									thoigian2 = new Timer(1000, new ActionListener() {
-//                                        
-//										@Override
-//										public void actionPerformed(ActionEvent e) {
-////											
-//											
-//											
-//											secord2--;
-//											System.out.println("SECORD LA "  +	secord2);
-//											if(secord2<=0)
-//											{
-//												
-//												thoigian2.stop();
-//												for (int i = 1; i <= 10; i++) {
-//													for (int j = 1; j <= 10; j++) {
-//														index = i * 10 + j - 10;
-//														if (index == 100)
-//															break;
-////														System.out.println("stringcommand : " +stringCommand );
-////														num_pp.setActionCommand(stringCommand);
-////														num_pp.setText("" + arr[index - 1]);
-////														num_pp.setForeground(Color.BLACK);
-////														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
-////														String temp  = bt.get(index - 1).getActionCommand();
-////														StringTokenizer cat1 = new StringTokenizer(temp, "#");
-////														String s1 = cat1.nextToken();
-////														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
-////														{
-////															System.out.println("localport :" +socket.getLocalPort());
-//															bt.get(index - 1).setVisible(true);
-////														}
-//															
-//														
-//														
-//														
-//													}
-//												}
-//												
-//											}
-//										}
-//
-//									});
-//
-//									thoigian2.start();
+											
+											
+											secord2--;
+											System.out.println("SECORD LA "  +	secord2);
+											if(secord2<=0)
+											{
+												
+												thoigian2.stop();
+												for (int i = 1; i <= 10; i++) {
+													for (int j = 1; j <= 10; j++) {
+														index = i * 10 + j - 10;
+														if (index == 100)
+															break;
+//														System.out.println("stringcommand : " +stringCommand );
+//														num_pp.setActionCommand(stringCommand);
+//														num_pp.setText("" + arr[index - 1]);
+//														num_pp.setForeground(Color.BLACK);
+//														System.out.println ("vo uu tien  :"+bt.get(index - 1).getActionCommand());
+//														String temp  = bt.get(index - 1).getActionCommand();
+//														StringTokenizer cat1 = new StringTokenizer(temp, "#");
+//														String s1 = cat1.nextToken();
+//														if( Integer.parseInt(cat1.nextToken()) ==socket.getLocalPort())
+//														{
+//															System.out.println("localport :" +socket.getLocalPort());
+															bt.get(index - 1).setVisible(true);
+//														}
+															
+														
+														
+														
+													}
+												}
+												
+											}
+										}
+
+									});
+
+									thoigian2.start();
 
 								} else
 									pointY++;
@@ -652,11 +605,11 @@ public class StartGUI {
 		Point2.setText("" + pointY);
 		mainJFrame.add(Point2);
 
-		dauhang.setBounds(990, 18, 100, 25);
-		dauhang.setForeground(Color.ORANGE);
-		dauhang.setBackground(Color.LIGHT_GRAY);
-		dauhang.setText("Ä�áº§u hÃ ng");
-		mainJFrame.add(dauhang);
+//		dauhang.setBounds(990, 18, 100, 25);
+//		dauhang.setForeground(Color.ORANGE);
+//		dauhang.setBackground(Color.LIGHT_GRAY);
+//		dauhang.setText("Ä�áº§u hÃ ng");
+//		mainJFrame.add(dauhang);
 //		dauhang.addActionListener(new ActionListener() {
 //			
 //			@Override
